@@ -1,16 +1,21 @@
 import express from 'express';
+import cors from 'cors';
+import helmet from 'helmet';
 import { prisma } from './config/postgres';
 import mongoose from 'mongoose';
-import { Blog } from './test_mongo/model';
+import ApiErrorHandler from './common/utils/ApiErrorHandler';
+import errorHandler from './common/errors/errorHandler';
+import { HTTP_STATUS } from './common/constants/responceCode';
 
 const app = express();
 
-app.get('/', async (req, res) => {
-  const data = await Blog.find();
-  console.log(data);
-  res.json({
-    data,
-  });
+app.use(cors());
+app.use(helmet());
+
+app.get('/', async (req, res, next) => {
+  return next(new ApiErrorHandler(HTTP_STATUS.BAD_REQUEST, 'Test Error'));
 });
+
+app.use(errorHandler);
 
 export default app;
