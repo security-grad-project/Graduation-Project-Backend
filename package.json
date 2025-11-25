@@ -1,25 +1,30 @@
 {
   "dependencies": {
+    "@prisma/adapter-pg": "^7.0.0",
+    "@prisma/client": "^7.0.0",
     "cors": "^2.8.5",
     "dotenv": "^17.2.3",
     "express": "^5.1.0",
     "jsonwebtoken": "^9.0.2",
     "morgan": "^1.10.1",
+    "pg": "^8.16.3",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.3"
   },
   "devDependencies": {
     "@types/cors": "^2.8.19",
-    "@types/dotenv": "^8.2.3",
     "@types/express": "^5.0.5",
     "@types/jsonwebtoken": "^9.0.10",
     "@types/morgan": "^1.9.10",
+    "@types/node": "^24.10.1",
+    "@types/pg": "^8.15.6",
     "@typescript-eslint/eslint-plugin": "^8.47.0",
     "@typescript-eslint/parser": "^8.47.0",
     "eslint": "^9.39.1",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-prettier": "^5.5.4",
     "prettier": "^3.6.2",
+    "prisma": "^7.0.0",
     "typescript-eslint": "^8.47.0"
   },
   "name": "graduation-project-backend",
@@ -30,7 +35,8 @@
     "lint": "eslint . --ext .ts",
     "lint:fix": "eslint . --ext .ts --fix",
     "format": "prettier --write .",
-    "start:dev": "nodemon"
+    "start:dev": "nodemon",
+    "start::dev": "nodemon --exec ts-node ./src/server.ts"
   },
   "author": "",
   "license": "ISC"

@@ -1,9 +1,12 @@
 import express from 'express';
+import { prisma } from './config/postgres';
 
 const app = express();
 
-app.listen(3000, () => {
-  console.log('Server is running on port 3000');
+app.get('/', async (req, res) => {
+  res.json({
+    users: await prisma.user.findMany(),
+  });
 });
 
 export default app;
