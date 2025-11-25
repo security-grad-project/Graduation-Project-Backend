@@ -1,8 +1,6 @@
 import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
-import { prisma } from './config/postgres';
-import mongoose from 'mongoose';
 import ApiErrorHandler from './common/utils/ApiErrorHandler';
 import errorHandler from './common/errors/errorHandler';
 import { HTTP_STATUS } from './common/constants/responceCode';
