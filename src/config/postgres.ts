@@ -1,4 +1,3 @@
-import 'dotenv/config';
 import { PrismaPg } from '@prisma/adapter-pg';
 import { PrismaClient } from '../generated/prisma/client';
 import env from './env';
@@ -14,7 +13,6 @@ export const testPostgresConnection = async () => {
     console.log('Prisma connected successfully to the database');
   } catch (err) {
     console.error('Prisma connection to the database failed:', err);
-    throw err;
   } finally {
     await prisma.$disconnect();
   }
