@@ -1,4 +1,4 @@
-import { STATUS } from '../constants/responseStatus';
+import { STATUS } from '../constants/constants';
 
 class ApiErrorHandler extends Error {
   readonly status: string;
