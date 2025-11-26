@@ -11,6 +11,7 @@ export default [
       'build/**',
       'coverage/**',
       'src/generated/**',
+      'prisma.config.ts',
       '*.config.js',
       '*.config.mjs',
     ],
