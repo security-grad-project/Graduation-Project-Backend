@@ -10,6 +10,7 @@ export default [
       'dist/**',
       'build/**',
       'coverage/**',
+      'src/generated/**',
       '*.config.js',
       '*.config.mjs',
     ],
