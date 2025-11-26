@@ -12,9 +12,8 @@ export const testPostgresConnection = async () => {
     await prisma.$connect();
     console.log('Prisma connected successfully to the database');
   } catch (err) {
-    console.error('Prisma connection to the database failed:', err);
-  } finally {
-    await prisma.$disconnect();
+    console.error('Prisma connection to the database failed: ', err);
+    throw err;
   }
 };
 

@@ -4,7 +4,6 @@ import helmet from 'helmet';
 import ApiErrorHandler from './common/utils/ApiErrorHandler';
 import errorHandler from './common/errors/errorHandler';
 import { HTTP_STATUS } from './common/constants/responceCode';
-
 const app = express();
 
 app.use(cors());
