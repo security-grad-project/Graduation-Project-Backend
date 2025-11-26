@@ -9,6 +9,11 @@ const app = express();
 app.use(cors());
 app.use(helmet());
 
+// Force an uncaught exception
+setTimeout(() => {
+  throw new Error('This is an uncaught exception test!');
+}, 1000);
+
 app.get('/', async (req, res, next) => {
   return next(new ApiErrorHandler(HTTP_STATUS.BAD_REQUEST, 'Test Error'));
 });

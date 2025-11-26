@@ -5,6 +5,12 @@ import app from './app';
 
 const PORT = process.env.PORT || 4000;
 
+process.on('uncaughtException', (err) => {
+  console.log('UNCAUGHT EXCEPTION! Shutting down...');
+  console.log(err.name, err.message);
+  process.exit(1);
+});
+
 const startServer = async () => {
   try {
     await testPostgresConnection();
