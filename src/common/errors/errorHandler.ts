@@ -1,6 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
 import env from '../../config/env';
-import ApiErrorHandler from '../utils/ApiErrorHandler';
 
 const sendDevelopmentError = (err: any, req: Request, res: Response) => {
   return res.status(err.statusCode).json({

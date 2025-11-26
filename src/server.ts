@@ -1,5 +1,5 @@
 import 'dotenv/config';
-import { prisma, testPostgresConnection } from './config/postgres';
+import { testPostgresConnection } from './config/postgres';
 import { mongoConnection } from './config/mongodb';
 import app from './app';
 
@@ -13,7 +13,7 @@ const startServer = async () => {
       console.log('Server is running on port 4000');
     });
   } catch (err) {
-    console.error('Failed to startup:');
+    console.error('Failed to startup:', err);
     process.exit(0);
   }
 };
