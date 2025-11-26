@@ -19,6 +19,14 @@ const startServer = async () => {
     const server = app.listen(PORT, async () => {
       console.log('Server is running on port 4000');
     });
+
+    process.on('unhandledRejection', (err: any) => {
+      console.log('UNHANDLED REJECTION!  Shutting down...');
+      console.log(err.name, err.message);
+      server.close(() => {
+        process.exit(1);
+      });
+    });
   } catch (err) {
     console.error('Failed to startup:', err);
     process.exit(1);
