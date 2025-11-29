@@ -4,7 +4,6 @@ import morgan from 'morgan';
 import cors from 'cors';
 import path from 'path';
 import fs from 'fs';
-import mongoSanitize from 'express-mongo-sanitize';
 import errorHandler from './common/errors/errorHandler';
 import limiter from './config/limiter';
 
@@ -19,7 +18,6 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 app.use(helmet());
 app.use(morgan('tiny', { stream: logStream }));
-app.use(mongoSanitize());
 app.use(limiter);
 
 app.get('/', async (req, res) => {
