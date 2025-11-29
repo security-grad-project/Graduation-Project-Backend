@@ -1,9 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
-import ApiErrorHandler from './common/utils/ApiErrorHandler';
 import errorHandler from './common/errors/errorHandler';
-import { HTTP_STATUS } from './common/constants/constants';
 import { morganMiddleware } from './common/middlewares/middleware';
 
 const app = express();
@@ -12,9 +10,8 @@ app.use(cors());
 app.use(helmet());
 app.use(morganMiddleware);
 
-app.get('/', async (req, res, next) => {
+app.get('/', async (req, res) => {
   res.send('Hello');
-  // return next(new ApiErrorHandler(HTTP_STATUS.BAD_REQUEST, 'Test Error'));
 });
 
 app.use(errorHandler);
