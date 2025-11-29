@@ -5,6 +5,7 @@ import cors from 'cors';
 import path from 'path';
 import fs from 'fs';
 import errorHandler from './common/errors/errorHandler';
+import { notFound } from './common/middlewares/middleware';
 import limiter from './config/limiter';
 
 const app = express();
@@ -24,6 +25,7 @@ app.get('/', async (req, res) => {
   res.send('Hello');
 });
 
+app.use(notFound);
 app.use(errorHandler);
 
 export default app;
