@@ -5,6 +5,7 @@ import fs from 'fs';
 import morgan from 'morgan';
 import path from 'path';
 import errorHandler from './common/errors/errorHandler';
+import limiter from './config/limiter';
 
 const app = express();
 
@@ -15,6 +16,7 @@ const logStream = fs.createWriteStream(path.join(process.cwd(), 'logs', 'api.log
 app.use(cors());
 app.use(helmet());
 app.use(morgan('tiny', { stream: logStream }));
+app.use(limiter);
 
 app.get('/', async (req, res) => {
   res.send('Hello');
