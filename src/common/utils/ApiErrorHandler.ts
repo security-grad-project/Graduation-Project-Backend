@@ -8,7 +8,7 @@ class ApiErrorHandler extends Error {
     super(message);
 
     this.statusCode = statusCode;
-    this.status = `${statusCode}`.startsWith('4') ? STATUS.FAIL : STATUS.SUCCESS;
+    this.status = `${statusCode}`.startsWith('4') ? STATUS.ERROR : STATUS.FAIL;
     this.isOperational = true;
 
     Error.captureStackTrace(this, this.constructor);
