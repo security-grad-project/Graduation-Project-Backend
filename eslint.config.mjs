@@ -4,12 +4,23 @@ import prettierConfig from 'eslint-config-prettier';
 
 /** @type {import("eslint").FlatConfig[]} */
 export default [
-  // Base TS + JS recommended rules
+  {
+    ignores: [
+      'node_modules/**',
+      'dist/**',
+      'build/**',
+      'coverage/**',
+      'src/generated/**',
+      'prisma.config.ts',
+      '*.config.js',
+      '*.config.mjs',
+    ],
+  },
+
   ...tseslint.configs.recommended,
 
   {
     files: ['**/*.ts'],
-    ignores: ['node_modules/**', 'dist/**'],
 
     languageOptions: {
       parser: tseslint.parser,
@@ -24,15 +35,12 @@ export default [
     },
 
     rules: {
-      // Prettier
       'prettier/prettier': 'error',
 
-      // Team rules
       '@typescript-eslint/no-unused-vars': 'error',
       '@typescript-eslint/no-explicit-any': 'warn',
     },
   },
 
-  // Prettier last
   prettierConfig,
 ];
