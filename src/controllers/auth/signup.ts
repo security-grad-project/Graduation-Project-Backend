@@ -8,6 +8,7 @@ import config from '../../config/env';
 
 export const signup = catchAsync(
   async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    // TODO: Remove this to
     const analysts = await prisma.analyst.count();
     if (analysts !== 0) return next(new ApiErrorHandler(403, 'Signup is disabled. Please login.'));
 
@@ -28,6 +29,7 @@ export const signup = catchAsync(
     });
 
     if (!analyst) return next(new ApiErrorHandler(400, 'something went wrong while signning up'));
+    // TODO : Remove token generation
     const refreshToken = generateRefreshToken(analyst.id);
     const accessToken = generateAccessToken(analyst.id);
 
