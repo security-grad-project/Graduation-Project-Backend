@@ -1,9 +1,8 @@
 import { Request, Response, NextFunction } from 'express';
-import catchAsync from '../../common/utils/catchAsync';
-import { prisma } from '../../config/postgres';
+import catchAsync from '../../../common/utils/catchAsync';
+import { prisma } from '../../../config/postgres';
 
 export const status = catchAsync(
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     const analysts = await prisma.analyst.count();
 

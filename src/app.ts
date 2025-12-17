@@ -9,8 +9,8 @@ import errorHandler from './common/errors/errorHandler';
 import { notFound } from './common/middlewares/index';
 import limiter from './config/limiter';
 import env from './config/env';
-import systemRouter from './routes/systemRouter';
-import authRouter from './routes/authRouter';
+import authRouter from './modules/Auth/routes/Auth.routes';
+import systemRouter from './modules/System/routes/System.routes';
 
 const app = express();
 
@@ -51,8 +51,9 @@ app.get('/health', (req, res) => {
   });
 });
 
-app.use('/api/system', systemRouter);
 app.use('/api/auth', authRouter);
+app.use('/api/system', systemRouter);
+
 app.all(/(.*)/, notFound);
 app.use(errorHandler);
 
