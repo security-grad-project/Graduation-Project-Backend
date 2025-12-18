@@ -4,11 +4,11 @@ import morgan from 'morgan';
 import cors from 'cors';
 import path from 'path';
 import fs from 'fs';
-import mongoSanitize from 'express-mongo-sanitize';
 import errorHandler from './common/errors/errorHandler';
 import { notFound } from './common/middlewares/index';
 import limiter from './config/limiter';
 import env from './config/env';
+import deviceRoute from './modules/device/device.routes';
 
 const app = express();
 
@@ -20,7 +20,6 @@ app.use(helmet());
 
 app.use(express.json({ limit: '1mb' }));
 app.use(express.urlencoded({ extended: true }));
-app.use(mongoSanitize());
 
 app.use(
   cors({
@@ -48,6 +47,8 @@ app.get('/health', (req, res) => {
     timestamp: new Date().toISOString(),
   });
 });
+
+app.use('/app/v1/devices', deviceRoute);
 
 app.all(/(.*)/, notFound);
 app.use(errorHandler);
