@@ -1,7 +1,7 @@
 import { SignupData } from '../types/types';
 import ApiErrorHandler from '../../../common/utils/ApiErrorHandler';
 import { prisma } from '../../../config/postgres';
-import bcrypt from 'bcrypt';
+import { hashPassword } from '../../../common/utils/util';
 
 export const signupService = async (data: SignupData) => {
   const { email, password, firstName, lastName, phoneNumber } = data;
@@ -9,7 +9,7 @@ export const signupService = async (data: SignupData) => {
   if (!email || !password || !firstName || !lastName || !phoneNumber)
     throw new ApiErrorHandler(400, 'some required values not exist');
 
-  const hashedPassword = await bcrypt.hash(password, 12);
+  const hashedPassword = await hashPassword(password);
 
   const analyst = await prisma.analyst.create({
     data: {
@@ -18,12 +18,10 @@ export const signupService = async (data: SignupData) => {
       firstName: firstName,
       lastName: lastName,
       phoneNumber: phoneNumber,
-      role: 'SOC_ADMIN',
-      lastLogin: new Date(),
     },
   });
 
-  if (!analyst) throw new ApiErrorHandler(400, 'something went wrong while signning up');
+  if (!analyst) throw new ApiErrorHandler(500, 'something went wrong while signning up');
 
   return analyst;
 };

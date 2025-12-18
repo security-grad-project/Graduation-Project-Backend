@@ -8,8 +8,7 @@ import errorHandler from './common/errors/errorHandler';
 import { notFound } from './common/middlewares/index';
 import limiter from './config/limiter';
 import env from './config/env';
-import authRouter from './modules/Auth/routes/Auth.routes';
-import systemRouter from './modules/System/routes/System.routes';
+import router from './routes/index';
 
 const app = express();
 
@@ -50,8 +49,7 @@ app.get('/health', (req, res) => {
   });
 });
 
-app.use('/api/auth', authRouter);
-app.use('/api/system', systemRouter);
+app.use('/api/v1', router);
 
 app.all(/(.*)/, notFound);
 app.use(errorHandler);

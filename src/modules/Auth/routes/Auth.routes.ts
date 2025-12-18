@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { signup } from '../controllers/Auth.controller';
-import { allowOnlyFirstRun } from '../middlewares/Auth.middlewares';
+import { allowOnlyFirstRun } from '../middlewares/allowFirstRun';
 
 const router = Router();
 
