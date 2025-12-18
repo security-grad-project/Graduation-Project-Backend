@@ -1,16 +1,14 @@
-import { Request, Response, NextFunction } from 'express';
+import { Request, Response } from 'express';
 import catchAsync from '../../../common/utils/catchAsync';
 import { prisma } from '../../../config/postgres';
 
-export const status = catchAsync(
-  async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-    const analysts = await prisma.analyst.count();
+export const status = catchAsync(async (req: Request, res: Response): Promise<void> => {
+  const analysts = await prisma.analyst.count();
 
-    const isFirstRun = analysts === 0;
+  const isFirstRun = analysts === 0;
 
-    res.status(200).json({
-      status: 'success',
-      isFirstRun,
-    });
-  },
-);
+  res.status(200).json({
+    status: 'success',
+    isFirstRun,
+  });
+});

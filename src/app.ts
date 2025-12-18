@@ -4,7 +4,6 @@ import morgan from 'morgan';
 import cors from 'cors';
 import path from 'path';
 import fs from 'fs';
-import mongoSanitize from 'express-mongo-sanitize';
 import errorHandler from './common/errors/errorHandler';
 import { notFound } from './common/middlewares/index';
 import limiter from './config/limiter';
