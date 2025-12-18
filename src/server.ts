@@ -1,7 +1,7 @@
 import 'dotenv/config';
 import http from 'http';
 import { testPostgresConnection, prisma } from './config/postgres';
-// import { mongoConnection } from './config/mongodb';
+import { mongoConnection } from './config/mongodb';
 import app from './app';
 import env from './config/env';
 import logger from './common/utils/logger';
@@ -17,7 +17,7 @@ process.on('uncaughtException', (err) => {
 const startServer = async () => {
   try {
     await testPostgresConnection();
-    // await mongoConnection();
+    await mongoConnection();
 
     server = app.listen(PORT, () => {
       logger.info(`Server is running on port ${PORT}`);
