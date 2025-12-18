@@ -8,7 +8,7 @@ import errorHandler from './common/errors/errorHandler';
 import { notFound } from './common/middlewares/index';
 import limiter from './config/limiter';
 import env from './config/env';
-import deviceRoute from './modules/device/device.routes';
+import router from './routes/index';
 
 const app = express();
 
@@ -48,7 +48,7 @@ app.get('/health', (req, res) => {
   });
 });
 
-app.use('/app/v1/devices', deviceRoute);
+app.use('/api/v1', router);
 
 app.all(/(.*)/, notFound);
 app.use(errorHandler);
