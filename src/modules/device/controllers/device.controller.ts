@@ -9,6 +9,7 @@ import * as deviceService from '../services/device.service';
 import { STATUS_CODE } from '../../../common/constants/responseCode';
 import { STATUS } from '../../../common/constants/responseStatus';
 import logger from '../../../common/utils/logger';
+import { buildDeviceFilter } from '../services/device.utils';
 
 export const createDevice = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
   const validatedData = createDeviceRequestValidation.parse(req.body);
@@ -65,5 +66,24 @@ export const listDevices = catchAsync(async (req: Request, res: Response, next: 
     status: STATUS.SUCCESS,
     data: data.devices,
     meta: data.metaData,
+  });
+});
+
+export const streamDevices = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+  const validatedData = listDevicesQueryValidation.parse(req.query);
+
+  res.setHeader('Content-Type', 'application/json');
+
+  const dataStream = deviceService.streamAllDevicesService(validatedData);
+
+  req.on('close', () => {
+    dataStream.destroy();
+  });
+
+  dataStream.pipe(res);
+
+  dataStream.on('error', (err) => {
+    console.error('Stream error:', err);
+    res.end();
   });
 });

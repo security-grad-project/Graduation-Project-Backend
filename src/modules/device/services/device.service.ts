@@ -10,6 +10,8 @@ import { STATUS_CODE, PRISMA_ERROR } from '../../../common/constants/constants';
 import { DeviceQueryOptions as GetDeviceQueryOptions } from '../types/device.types';
 import logger from '../../../common/utils/logger';
 import { buildDeviceFilter } from './device.utils';
+import { query } from 'winston';
+import { createPrismaStream } from '../../../common/utils/util';
 
 export const createDeviceService = async (data: CreateDeviceRequestInput) => {
   try {
@@ -117,4 +119,9 @@ export const listDevicesService = async (query: listDevicesQueryInput) => {
     },
     devices,
   };
+};
+
+export const streamAllDevicesService = (query: listDevicesQueryInput) => {
+  const where = buildDeviceFilter(query);
+  return createPrismaStream(prisma.device, where, 3);
 };
