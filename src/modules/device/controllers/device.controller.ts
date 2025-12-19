@@ -1,16 +1,19 @@
 import { Request, Response, NextFunction } from 'express';
 import catchAsync from '../../../common/utils/catchAsync';
-import { createDeviceValidation, updateDeviceValidation } from '../validation/device.validation';
+import {
+  createDeviceRequestValidation,
+  updateDeviceQueryValidation,
+  listDevicesQueryValidation,
+} from '../validation/device.validation';
 import * as deviceService from '../services/device.service';
 import { STATUS_CODE } from '../../../common/constants/responseCode';
 import { STATUS } from '../../../common/constants/responseStatus';
 import logger from '../../../common/utils/logger';
-import { json } from 'zod';
-import { stat } from 'fs';
-import { status } from '../../System/controllers/System.controller';
+import { da } from 'zod/v4/locales';
+import { meta } from 'zod/v4/core';
 
 export const createDevice = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-  const validatedData = createDeviceValidation.parse(req.body);
+  const validatedData = createDeviceRequestValidation.parse(req.body);
 
   const device = await deviceService.createDeviceService(validatedData);
 
@@ -39,7 +42,7 @@ export const getDeviceById = catchAsync(async (req: Request, res: Response, next
 
 export const updateDevice = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
   const deviceId = req.params.id;
-  const validatedData = updateDeviceValidation.parse(req.body);
+  const validatedData = updateDeviceQueryValidation.parse(req.body);
   const device = await deviceService.updateDeviceService(deviceId, validatedData);
 
   logger.info(`Device updated successfully: ID ${deviceId}`);
@@ -55,4 +58,14 @@ export const deleteDevice = catchAsync(async (req: Request, res: Response, next:
   const deviceId = req.params.id;
   await deviceService.deleteDeviceService(deviceId);
   res.status(STATUS_CODE.NO_CONTENT).send();
+});
+
+export const listDevices = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+  const validatedData = listDevicesQueryValidation.parse(req.query);
+  const data = await deviceService.listDevicesService(validatedData);
+  res.status(STATUS_CODE.SUCCESS).json({
+    status: STATUS.SUCCESS,
+    data: data.devices,
+    meta: data.metaData,
+  });
 });

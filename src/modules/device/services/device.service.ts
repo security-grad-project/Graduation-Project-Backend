@@ -1,12 +1,16 @@
-import { CreateDeviceInput, UpdateDeviceInput } from '../validation/device.validation';
+import { Prisma } from '@prisma/client';
+import {
+  CreateDeviceRequestInput,
+  listDevicesQueryInput,
+  UpdateDeviceQueryInput,
+} from '../validation/device.validation';
 import { prisma } from '../../../config/postgres';
 import ApiErrorHandler from '../../../common/utils/ApiErrorHandler';
 import { STATUS_CODE, PRISMA_ERROR } from '../../../common/constants/constants';
-import { DeviceQueryOptions } from '../types/device.types';
+import { DeviceQueryOptions as GetDeviceQueryOptions } from '../types/device.types';
 import logger from '../../../common/utils/logger';
-import { de } from 'zod/v4/locales';
 
-export const createDeviceService = async (data: CreateDeviceInput) => {
+export const createDeviceService = async (data: CreateDeviceRequestInput) => {
   try {
     const device = await prisma.device.create({
       data: {
@@ -31,7 +35,7 @@ export const createDeviceService = async (data: CreateDeviceInput) => {
   }
 };
 
-export const getDeviceByIdService = async (id: string, options: DeviceQueryOptions = {}) => {
+export const getDeviceByIdService = async (id: string, options: GetDeviceQueryOptions = {}) => {
   const { includeServices, includeAlerts } = options;
   const device = await prisma.device.findUnique({
     where: { id: id },
@@ -47,7 +51,7 @@ export const getDeviceByIdService = async (id: string, options: DeviceQueryOptio
   return device;
 };
 
-export const updateDeviceService = async (id: string, data: UpdateDeviceInput) => {
+export const updateDeviceService = async (id: string, data: UpdateDeviceQueryInput) => {
   try {
     const device = await prisma.device.update({
       where: {
@@ -87,4 +91,32 @@ export const deleteDeviceService = async (id: string) => {
     logger.error(`Database error in deleteDevice: ${error.message}`);
     throw error;
   }
+};
+
+export const listDevicesService = async (query: listDevicesQueryInput) => {
+  const { page, limit, userId, ip, hostName } = query;
+  const where: Prisma.DeviceWhereInput = {};
+  if (userId) where.userId = userId;
+  if (ip) where.ip = ip;
+  if (hostName) where.hostName = { contains: hostName, mode: 'insensitive' };
+  const skip = (page - 1) * limit;
+
+  const [total, devices] = await prisma.$transaction([
+    prisma.device.count({ where }),
+    prisma.device.findMany({
+      where,
+      skip,
+      take: limit,
+      orderBy: { createdAt: 'desc' },
+    }),
+  ]);
+
+  return {
+    metaData: {
+      devices_count: total,
+      page,
+      limit,
+    },
+    devices,
+  };
 };
