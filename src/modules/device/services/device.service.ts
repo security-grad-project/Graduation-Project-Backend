@@ -17,6 +17,7 @@ export const createDeviceService = async (data: CreateDeviceInput) => {
       },
     });
 
+    logger.info(`Device created successfully: ID ${device.id}`);
     return device;
   } catch (error: any) {
     if (error.code === PRISMA_ERROR.ForeignKeyConstraint) {
@@ -40,6 +41,7 @@ export const getDeviceByIdService = async (id: string, options: DeviceQueryOptio
     },
   });
   if (!device) {
+    logger.warn(`Get device failed: Device ID ${id} not found.`);
     throw new ApiErrorHandler(STATUS_CODE.NOT_FOUND, 'Device not found');
   }
   return device;
@@ -53,12 +55,36 @@ export const updateDeviceService = async (id: string, data: UpdateDeviceInput) =
       },
       data,
     });
+    logger.info(`Device updated successfully: ID ${id}`);
     return device;
   } catch (error: any) {
     if (error.code === PRISMA_ERROR.RecordNotFound) {
+      logger.warn(`Update device failed: Device ID ${id} not found.`);
       throw new ApiErrorHandler(STATUS_CODE.NOT_FOUND, 'Device not found');
     }
     logger.error(`Database error in updateDevice: ${error.message}`);
+    throw error;
+  }
+};
+
+export const deleteDeviceService = async (id: string) => {
+  try {
+    await prisma.device.delete({ where: { id: id } });
+
+    logger.info(`Device deleted successfully: ID ${id}`);
+  } catch (error: any) {
+    if (error.code === PRISMA_ERROR.ForeignKeyConstraint) {
+      logger.warn(`Delete blocked: Device ${id} has active services or alerts.`);
+      throw new ApiErrorHandler(
+        STATUS_CODE.CONFLICT,
+        'Cannot delete device: It has active services or alerts associated with it.',
+      );
+    }
+    if (error.code === PRISMA_ERROR.RecordNotFound) {
+      logger.warn(`Delete device failed: Device ID ${id} not found.`);
+      throw new ApiErrorHandler(STATUS_CODE.NOT_FOUND, 'Device not found');
+    }
+    logger.error(`Database error in deleteDevice: ${error.message}`);
     throw error;
   }
 };

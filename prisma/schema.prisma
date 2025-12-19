@@ -27,17 +27,17 @@ enum Status {
   OTHER
 }
 
-model Analyst { 
-  id String @id @default(uuid())
-  firstName String
-  lastName String
-  email String @unique
-  password String
-  role Role @default(SOC_ADMIN)
+model Analyst {
+  id          String   @id @default(uuid())
+  firstName   String
+  lastName    String
+  email       String   @unique
+  password    String
+  role        Role     @default(SOC_ADMIN)
   phoneNumber String
-  lastLogin DateTime @default(now())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  lastLogin   DateTime @default(now())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
 
 model User {

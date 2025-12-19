@@ -6,6 +6,8 @@ import { STATUS_CODE } from '../../../common/constants/responseCode';
 import { STATUS } from '../../../common/constants/responseStatus';
 import logger from '../../../common/utils/logger';
 import { json } from 'zod';
+import { stat } from 'fs';
+import { status } from '../../System/controllers/System.controller';
 
 export const createDevice = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
   const validatedData = createDeviceValidation.parse(req.body);
@@ -47,4 +49,10 @@ export const updateDevice = catchAsync(async (req: Request, res: Response, next:
     message: 'Device updated successfully',
     data: device,
   });
+});
+
+export const deleteDevice = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+  const deviceId = req.params.id;
+  await deviceService.deleteDeviceService(deviceId);
+  res.status(STATUS_CODE.NO_CONTENT).send();
 });
