@@ -1,11 +1,12 @@
-import { CreateDeviceInput } from '../validation/device.validation';
+import { CreateDeviceInput, UpdateDeviceInput } from '../validation/device.validation';
 import { prisma } from '../../../config/postgres';
 import ApiErrorHandler from '../../../common/utils/ApiErrorHandler';
 import { STATUS_CODE, PRISMA_ERROR } from '../../../common/constants/constants';
 import { DeviceQueryOptions } from '../types/device.types';
 import logger from '../../../common/utils/logger';
+import { de } from 'zod/v4/locales';
 
-export const createDevice = async (data: CreateDeviceInput) => {
+export const createDeviceService = async (data: CreateDeviceInput) => {
   try {
     const device = await prisma.device.create({
       data: {
@@ -24,13 +25,12 @@ export const createDevice = async (data: CreateDeviceInput) => {
       throw new ApiErrorHandler(STATUS_CODE.NOT_FOUND, 'User not found');
     }
 
-    logger.error(`Database error in createDevice: ${error.message}`, {
-      stack: error.stack,
-    });
+    logger.error(`Database error in createDevice: ${error.message}`);
     throw error;
   }
 };
-export const getDeviceById = async (id: string, options: DeviceQueryOptions = {}) => {
+
+export const getDeviceByIdService = async (id: string, options: DeviceQueryOptions = {}) => {
   const { includeServices, includeAlerts } = options;
   const device = await prisma.device.findUnique({
     where: { id: id },
@@ -43,4 +43,22 @@ export const getDeviceById = async (id: string, options: DeviceQueryOptions = {}
     throw new ApiErrorHandler(STATUS_CODE.NOT_FOUND, 'Device not found');
   }
   return device;
+};
+
+export const updateDeviceService = async (id: string, data: UpdateDeviceInput) => {
+  try {
+    const device = await prisma.device.update({
+      where: {
+        id: id,
+      },
+      data,
+    });
+    return device;
+  } catch (error: any) {
+    if (error.code === PRISMA_ERROR.RecordNotFound) {
+      throw new ApiErrorHandler(STATUS_CODE.NOT_FOUND, 'Device not found');
+    }
+    logger.error(`Database error in updateDevice: ${error.message}`);
+    throw error;
+  }
 };
