@@ -26,9 +26,10 @@ export const createPrismaStream = <T extends ModelWithId>(
       while (true) {
         const items: T[] = await model.findMany({
           take: batchSize,
-          skip: lastId ? 1 : 0,
-          cursor: lastId ? { id: lastId } : undefined,
-          where,
+          where: {
+            ...where,
+            ...(lastId ? { id: { gt: lastId } } : {}),
+          },
           orderBy: { id: 'asc' },
         });
         if (items.length === 0) break;
