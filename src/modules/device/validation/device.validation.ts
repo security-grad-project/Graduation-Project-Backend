@@ -7,4 +7,4 @@ export const createDeviceValidation = z.object({
   userId: z.uuid(),
 });
 
-export type CreateDevideInput = z.infer<typeof createDeviceValidation>;
+export type CreateDeviceInput = z.infer<typeof createDeviceValidation>;
