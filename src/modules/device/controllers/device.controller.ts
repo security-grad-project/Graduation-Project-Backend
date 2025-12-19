@@ -9,8 +9,6 @@ import * as deviceService from '../services/device.service';
 import { STATUS_CODE } from '../../../common/constants/responseCode';
 import { STATUS } from '../../../common/constants/responseStatus';
 import logger from '../../../common/utils/logger';
-import { da } from 'zod/v4/locales';
-import { meta } from 'zod/v4/core';
 
 export const createDevice = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
   const validatedData = createDeviceRequestValidation.parse(req.body);

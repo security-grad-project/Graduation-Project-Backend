@@ -9,6 +9,7 @@ import ApiErrorHandler from '../../../common/utils/ApiErrorHandler';
 import { STATUS_CODE, PRISMA_ERROR } from '../../../common/constants/constants';
 import { DeviceQueryOptions as GetDeviceQueryOptions } from '../types/device.types';
 import logger from '../../../common/utils/logger';
+import { buildDeviceFilter } from './device.utils';
 
 export const createDeviceService = async (data: CreateDeviceRequestInput) => {
   try {
@@ -94,11 +95,8 @@ export const deleteDeviceService = async (id: string) => {
 };
 
 export const listDevicesService = async (query: listDevicesQueryInput) => {
-  const { page, limit, userId, ip, hostName } = query;
-  const where: Prisma.DeviceWhereInput = {};
-  if (userId) where.userId = userId;
-  if (ip) where.ip = ip;
-  if (hostName) where.hostName = { contains: hostName, mode: 'insensitive' };
+  const where = buildDeviceFilter(query);
+  const { page, limit } = query;
   const skip = (page - 1) * limit;
 
   const [total, devices] = await prisma.$transaction([
