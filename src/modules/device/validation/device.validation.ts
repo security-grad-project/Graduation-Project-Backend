@@ -13,6 +13,8 @@ export const listDevicesQueryValidation = z.object({
   ip: z.union([z.ipv4(), z.ipv6()]).optional(),
   hostName: z.string().optional(),
   userId: z.string().uuid().optional(),
-  page: z.coerce.number().int().min(1).default(1),
-  limit: z.coerce.number().int().min(1).max(100).default(10),
+  page: z.coerce.number().int().min(1).default(1).optional(),
+  limit: z.coerce.number().int().min(1).max(100).default(10).optional(),
+  sortBy: z.string().optional(),
+  sortOrder: z.enum(['asc', 'desc']).optional(),
 });

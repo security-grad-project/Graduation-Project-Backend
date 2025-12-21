@@ -4,9 +4,10 @@ import * as deviceService from '../services/device.service';
 import { STATUS_CODE } from '../../../common/constants/responseCode';
 import { STATUS } from '../../../common/constants/responseStatus';
 import logger from '../../../common/utils/logger';
+import { CreateDeviceDto, UpdateDeviceDto, ListDevicesQueryDto } from '../dto';
 
 export const createDevice = catchAsync(async (req: Request, res: Response) => {
-  const data = req.body;
+  const data: CreateDeviceDto = req.body as CreateDeviceDto;
   const device = await deviceService.createDeviceService(data);
 
   logger.info(`Device created successfully: ID ${device.id}`);
@@ -34,7 +35,7 @@ export const getDeviceById = catchAsync(async (req: Request, res: Response) => {
 
 export const updateDevice = catchAsync(async (req: Request, res: Response) => {
   const deviceId = req.params.id;
-  const data = req.body;
+  const data: UpdateDeviceDto = req.body as UpdateDeviceDto;
   const device = await deviceService.updateDeviceService(deviceId, data);
 
   logger.info(`Device updated successfully: ID ${deviceId}`);
@@ -53,15 +54,7 @@ export const deleteDevice = catchAsync(async (req: Request, res: Response) => {
 });
 
 export const listDevices = catchAsync(async (req: Request, res: Response) => {
-  const query = {
-    page: Number(req.query.page) || 1,
-    limit: Number(req.query.limit) || 10,
-    sortBy: (req.query.sortBy as string) || 'createdAt',
-    sortOrder: ((req.query.sortOrder as string) || 'desc') as 'asc' | 'desc',
-    userId: (req.query.userId as string) || undefined,
-    ip: (req.query.ip as string) || undefined,
-    hostName: (req.query.hostName as string) || undefined,
-  };
+  const query: ListDevicesQueryDto = req.query as unknown as ListDevicesQueryDto;
   const result = await deviceService.listDevicesService(query);
   res.status(STATUS_CODE.SUCCESS).json({
     status: STATUS.SUCCESS,
@@ -77,6 +70,8 @@ export const streamDevices = catchAsync(async (req: Request, res: Response) => {
     userId: (req.query.userId as string) || undefined,
     ip: (req.query.ip as string) || undefined,
     hostName: (req.query.hostName as string) || undefined,
+    port: (req.query.port as string) || undefined,
+    createdAt: (req.query.createdAt as string) || undefined,
   };
 
   const dataStream = deviceService.streamAllDevicesService(query);

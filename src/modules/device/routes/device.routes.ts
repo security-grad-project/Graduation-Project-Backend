@@ -10,13 +10,18 @@ import {
 import {
   createDeviceRequestValidation,
   updateDeviceRequestValidation,
+  listDevicesQueryValidation,
 } from '../validation/device.validation';
 import validationMiddleware from '../../../common/middlewares/validation.middleware';
 
 const router = express.Router();
 
 router.post('/', validationMiddleware({ body: createDeviceRequestValidation }), createDevice);
-router.get('/', listDevices);
+router.get(
+  '/',
+  validationMiddleware({ query: listDevicesQueryValidation }) as express.RequestHandler,
+  listDevices,
+);
 router.get('/stream', streamDevices);
 router.get('/:id', getDeviceById);
 router.patch('/:id', validationMiddleware({ body: updateDeviceRequestValidation }), updateDevice);

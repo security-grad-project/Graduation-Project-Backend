@@ -1,11 +1,11 @@
-import { CreateDeviceDto, UpdateDeviceDto } from '../dto';
+import { CreateDeviceDto, UpdateDeviceDto, ListDevicesQueryDto } from '../dto';
 import { prisma } from '../../../config/postgres';
 import ApiErrorHandler from '../../../common/utils/ApiErrorHandler';
 import { STATUS_CODE } from '../../../common/constants/constants';
 import { DeviceQueryOptions as GetDeviceQueryOptions } from '../types/device.types';
 import logger from '../../../common/utils/logger';
 import { buildDeviceFilter } from './device.utils';
-import { createPrismaStream, paginate, PaginationOptions } from '../../../common/utils/util';
+import { createPrismaStream, paginate } from '../../../common/utils/util';
 
 export const createDeviceService = async (data: CreateDeviceDto) => {
   const device = await prisma.device.create({
@@ -52,13 +52,7 @@ export const deleteDeviceService = async (id: string) => {
   logger.info(`Device deleted successfully: ID ${id}`);
 };
 
-export const listDevicesService = async (
-  query: PaginationOptions & {
-    userId?: string;
-    ip?: string;
-    hostName?: string;
-  },
-) => {
+export const listDevicesService = async (query: ListDevicesQueryDto) => {
   const where = buildDeviceFilter({
     userId: query.userId,
     ip: query.ip,
