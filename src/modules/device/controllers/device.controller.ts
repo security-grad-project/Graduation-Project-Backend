@@ -1,20 +1,13 @@
-import { Request, Response, NextFunction } from 'express';
+import { Request, Response } from 'express';
 import catchAsync from '../../../common/utils/catchAsync';
-import {
-  createDeviceRequestValidation,
-  updateDeviceQueryValidation,
-  listDevicesQueryValidation,
-} from '../validation/device.validation';
 import * as deviceService from '../services/device.service';
 import { STATUS_CODE } from '../../../common/constants/responseCode';
 import { STATUS } from '../../../common/constants/responseStatus';
 import logger from '../../../common/utils/logger';
-import { buildDeviceFilter } from '../services/device.utils';
 
-export const createDevice = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-  const validatedData = createDeviceRequestValidation.parse(req.body);
-
-  const device = await deviceService.createDeviceService(validatedData);
+export const createDevice = catchAsync(async (req: Request, res: Response) => {
+  const data = req.body;
+  const device = await deviceService.createDeviceService(data);
 
   logger.info(`Device created successfully: ID ${device.id}`);
 
@@ -25,7 +18,7 @@ export const createDevice = catchAsync(async (req: Request, res: Response, next:
   });
 });
 
-export const getDeviceById = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+export const getDeviceById = catchAsync(async (req: Request, res: Response) => {
   const deviceId = req.params.id;
   const { includeServices, includeAlerts } = req.query;
   const device = await deviceService.getDeviceByIdService(deviceId, {
@@ -39,10 +32,10 @@ export const getDeviceById = catchAsync(async (req: Request, res: Response, next
   });
 });
 
-export const updateDevice = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+export const updateDevice = catchAsync(async (req: Request, res: Response) => {
   const deviceId = req.params.id;
-  const validatedData = updateDeviceQueryValidation.parse(req.body);
-  const device = await deviceService.updateDeviceService(deviceId, validatedData);
+  const data = req.body;
+  const device = await deviceService.updateDeviceService(deviceId, data);
 
   logger.info(`Device updated successfully: ID ${deviceId}`);
 
@@ -53,28 +46,40 @@ export const updateDevice = catchAsync(async (req: Request, res: Response, next:
   });
 });
 
-export const deleteDevice = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+export const deleteDevice = catchAsync(async (req: Request, res: Response) => {
   const deviceId = req.params.id;
   await deviceService.deleteDeviceService(deviceId);
   res.status(STATUS_CODE.NO_CONTENT).send();
 });
 
-export const listDevices = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-  const validatedData = listDevicesQueryValidation.parse(req.query);
-  const data = await deviceService.listDevicesService(validatedData);
+export const listDevices = catchAsync(async (req: Request, res: Response) => {
+  const query = {
+    page: Number(req.query.page) || 1,
+    limit: Number(req.query.limit) || 10,
+    sortBy: (req.query.sortBy as string) || 'createdAt',
+    sortOrder: ((req.query.sortOrder as string) || 'desc') as 'asc' | 'desc',
+    userId: (req.query.userId as string) || undefined,
+    ip: (req.query.ip as string) || undefined,
+    hostName: (req.query.hostName as string) || undefined,
+  };
+  const result = await deviceService.listDevicesService(query);
   res.status(STATUS_CODE.SUCCESS).json({
     status: STATUS.SUCCESS,
-    data: data.devices,
-    meta: data.metaData,
+    data: result.data,
+    meta: result.meta,
   });
 });
 
-export const streamDevices = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-  const validatedData = listDevicesQueryValidation.parse(req.query);
-
+export const streamDevices = catchAsync(async (req: Request, res: Response) => {
   res.setHeader('Content-Type', 'application/json');
 
-  const dataStream = deviceService.streamAllDevicesService(validatedData);
+  const query = {
+    userId: (req.query.userId as string) || undefined,
+    ip: (req.query.ip as string) || undefined,
+    hostName: (req.query.hostName as string) || undefined,
+  };
+
+  const dataStream = deviceService.streamAllDevicesService(query);
 
   req.on('close', () => {
     dataStream.destroy();

@@ -7,11 +7,19 @@ import {
   streamDevices,
   updateDevice,
 } from '../controllers/device.controller';
+import {
+  createDeviceRequestValidation,
+  updateDeviceRequestValidation,
+} from '../validation/device.validation';
+import validationMiddleware from '../../../common/middlewares/validation.middleware';
 
 const router = express.Router();
 
-router.route('/').post(createDevice).get(listDevices);
+router.post('/', validationMiddleware({ body: createDeviceRequestValidation }), createDevice);
+router.get('/', listDevices);
 router.get('/stream', streamDevices);
-router.route('/:id').get(getDeviceById).patch(updateDevice).delete(deleteDevice);
+router.get('/:id', getDeviceById);
+router.patch('/:id', validationMiddleware({ body: updateDeviceRequestValidation }), updateDevice);
+router.delete('/:id', deleteDevice);
 
 export default router;
