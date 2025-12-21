@@ -1,7 +1,7 @@
 import { SignupData } from '../types/types';
 import ApiErrorHandler from '../../../common/utils/ApiErrorHandler';
 import { prisma } from '../../../config/postgres';
-import { hashPassword } from '../../../common/utils/util';
+import { hashPassword } from '../../../common/utils/primsa-util';
 
 export const signupService = async (data: SignupData) => {
   const { email, password, firstName, lastName, phoneNumber } = data;

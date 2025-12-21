@@ -4,4 +4,3 @@ export interface CreateDeviceDto {
   port: number;
   userId: string;
 }
-

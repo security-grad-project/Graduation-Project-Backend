@@ -5,7 +5,7 @@ import { STATUS_CODE } from '../../../common/constants/constants';
 import { DeviceQueryOptions as GetDeviceQueryOptions } from '../types/device.types';
 import logger from '../../../common/utils/logger';
 import { buildDeviceFilter } from './device.utils';
-import { createPrismaStream, paginate } from '../../../common/utils/util';
+import { createPrismaStream, paginate } from '../../../common/utils/primsa-util';
 
 export const createDeviceService = async (data: CreateDeviceDto) => {
   const device = await prisma.device.create({
