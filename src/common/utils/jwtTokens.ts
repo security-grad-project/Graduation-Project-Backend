@@ -1,9 +1,6 @@
 import jwt from 'jsonwebtoken';
 import config from '../../config/env';
 import { ITokenPayload } from '../interfaces/types';
-import { token } from 'morgan';
-import { rejects } from 'assert';
-import { decode } from 'punycode';
 
 export const generateToken = (id: string, additionalPayload: object = {}): string => {
   const payload = { id, ...additionalPayload };
