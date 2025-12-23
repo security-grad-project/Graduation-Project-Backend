@@ -5,9 +5,9 @@ import { IRequest } from '../interfaces/types';
 import { STATUS_CODE } from '../constants/responseCode';
 import catchAsync from '../utils/catchAsync';
 
-export const restrictedTo = (...allwoedRoles: Role[]) =>
+export const restrictedTo = (...allowedRoles: Role[]) =>
   catchAsync(async (req: IRequest, res: Response, next: NextFunction) => {
-    if (!allwoedRoles.includes(req.user?.role as Role)) {
+    if (!allowedRoles.includes(req.user?.role as Role)) {
       return next(
         new ApiErrorHandler(
           STATUS_CODE.FORBIDDEN,
