@@ -27,27 +27,27 @@ enum Status {
   OTHER
 }
 
-model Analyst { 
-  id String @id @default(uuid())
-  firstName String
-  lastName String
-  email String @unique
-  password String
-  role Role @default(SOC_ADMIN)
+model Analyst {
+  id          String   @id @default(uuid())
+  firstName   String
+  lastName    String
+  email       String   @unique
+  password    String
+  role        Role     @default(SOC_ADMIN)
   phoneNumber String
-  lastLogin DateTime @default(now())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  lastLogin   DateTime @default(now())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
 
 model User {
-  id String @id @default(uuid())
-  firstName String
-  lastName String
-  email String @unique
+  id          String   @id @default(uuid())
+  firstName   String
+  lastName    String
+  email       String   @unique
   phoneNumber String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
   devices Device[]
 
@@ -55,12 +55,12 @@ model User {
 }
 
 model Device {
-  id String @id @default(uuid())
- ip String
- hostName String
-  port Int
-  userId String
-  user User @relation(fields: [userId], references: [id])
+  id        String   @id @default(uuid())
+  ip        String
+  hostName  String
+  port      Int
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -70,38 +70,38 @@ model Device {
 }
 
 model Service {
-  id String @id @default(uuid())
-  type String
-  user User @relation(fields: [userId], references: [id])
-  userId String
-  device Device @relation(fields: [deviceId], references: [id])
-  deviceId String
+  id        String   @id @default(uuid())
+  type      String
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+  device    Device   @relation(fields: [deviceId], references: [id])
+  deviceId  String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
 model Rule {
-  id String @id @default(uuid())
-  name String
+  id          String   @id @default(uuid())
+  name        String
   description String
-  type String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  type        String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
   alerts Alert[]
 }
 
 model Alert {
-  id String @id @default(uuid())
-  name String
+  id          String   @id @default(uuid())
+  name        String
   description String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  rule Rule @relation(fields: [ruleId], references: [id])
-  ruleId String
-  device Device @relation(fields: [deviceId], references: [id])
-  deviceId String
-  confidence Float
-  severity Severity
-  status Status
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  rule        Rule     @relation(fields: [ruleId], references: [id])
+  ruleId      String
+  device      Device   @relation(fields: [deviceId], references: [id])
+  deviceId    String
+  confidence  Float
+  severity    Severity
+  status      Status
 }

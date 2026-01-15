@@ -9,16 +9,19 @@
     "express-mongo-sanitize": "^2.2.0",
     "express-rate-limit": "^8.2.1",
     "helmet": "^8.1.0",
-    "jsonwebtoken": "^9.0.2",
+    "jsonwebtoken": "^9.0.3",
     "mongodb": "^7.0.0",
     "mongoose": "^9.0.0",
     "morgan": "^1.10.1",
     "pg": "^8.16.3",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.1",
+    "rest-collection-stream": "^0.0.1",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.3",
-    "winston": "^3.18.3"
+    "winston": "^3.18.3",
+    "zod": "^4.2.1",
+    "zod-validation-error": "^5.0.0"
   },
   "devDependencies": {
     "@types/bcrypt": "^6.0.0",
