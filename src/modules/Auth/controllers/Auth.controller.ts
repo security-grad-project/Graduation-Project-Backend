@@ -46,7 +46,7 @@ export const login = catchAsync(async (req: Request, res: Response): Promise<voi
 });
 
 export const refresh = catchAsync(async (req: Request, res: Response): Promise<void> => {
-  const refreshToken = req.cookies.refreshToken || req.body.refreshToken;
+  const refreshToken = req.cookies.refreshToken;
 
   if (!refreshToken) {
     throw new ApiErrorHandler(STATUS_CODE.BAD_REQUEST, 'Refresh token is required');
