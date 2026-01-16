@@ -5,6 +5,7 @@ import { mongoConnection } from './config/mongodb';
 import app from './app';
 import env from './config/env';
 import logger from './common/utils/logger';
+import { startTokenCleanupJob, stopTokenCleanupJob } from './jobs/token-cleanup.job';
 
 const PORT = env.PORT;
 let server: http.Server | null = null;
@@ -19,6 +20,9 @@ const startServer = async () => {
     await testPostgresConnection();
     await mongoConnection();
 
+    // Start token cleanup job
+    startTokenCleanupJob();
+
     server = app.listen(PORT, () => {
       logger.info(`Server is running on port ${PORT}`);
     });
@@ -27,6 +31,7 @@ const startServer = async () => {
       logger.error('UNHANDLED REJECTION! Shutting down...', { error: err });
       if (server) {
         server.close(async () => {
+          stopTokenCleanupJob();
           await prisma.$disconnect().catch(() => undefined);
           process.exit(1);
         });
@@ -39,6 +44,7 @@ const startServer = async () => {
       logger.info(`${signal} received. Shutting down gracefully...`);
       if (server) {
         server.close(async () => {
+          stopTokenCleanupJob();
           await prisma.$disconnect().catch(() => undefined);
           process.exit(0);
         });

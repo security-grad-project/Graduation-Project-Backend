@@ -13,13 +13,12 @@ import {
   listDevicesQueryValidation,
 } from '../validation/device.validation';
 import validationMiddleware from '../../../common/middlewares/validation.middleware';
-import protect from '../../../common/middlewares/protect.middleware';
-import { restrictedTo } from '../../../common/middlewares/restrictedTo.middleware';
+import { authenticate, authorize } from '../../../common/middlewares';
 import { Role } from '@prisma/client';
 
 const router = express.Router();
 
-router.use(protect);
+router.use(authenticate);
 
 router.get('/stream', streamDevices);
 router.get('/:id', getDeviceById);
@@ -29,7 +28,7 @@ router.get(
   listDevices,
 );
 
-router.use(restrictedTo(Role.SOC_ADMIN));
+router.use(authorize(Role.SOC_ADMIN));
 
 router.post('/', validationMiddleware({ body: createDeviceRequestValidation }), createDevice);
 router.patch('/:id', validationMiddleware({ body: updateDeviceRequestValidation }), updateDevice);

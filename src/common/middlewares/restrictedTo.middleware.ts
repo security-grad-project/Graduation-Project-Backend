@@ -3,11 +3,16 @@ import { Role } from '@prisma/client';
 import ApiErrorHandler from '../utils/ApiErrorHandler';
 import { IRequest } from '../interfaces/types';
 import { STATUS_CODE } from '../constants/responseCode';
-import catchAsync from '../utils/catchAsync';
 
-export const restrictedTo = (...allowedRoles: Role[]) =>
-  catchAsync(async (req: IRequest, res: Response, next: NextFunction) => {
-    if (!allowedRoles.includes(req.user?.role as Role)) {
+export const authorize = (...allowedRoles: Role[]) => {
+  return (req: IRequest, res: Response, next: NextFunction) => {
+    if (!req.user) {
+      return next(
+        new ApiErrorHandler(STATUS_CODE.UNAUTHORIZED, 'Please login to access this route'),
+      );
+    }
+
+    if (!allowedRoles.includes(req.user.role)) {
       return next(
         new ApiErrorHandler(
           STATUS_CODE.FORBIDDEN,
@@ -16,4 +21,7 @@ export const restrictedTo = (...allowedRoles: Role[]) =>
       );
     }
     next();
-  });
+  };
+};
+
+export const restrictedTo = authorize;
