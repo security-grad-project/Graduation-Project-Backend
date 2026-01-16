@@ -8,6 +8,7 @@ export default {
   MONGODB_URL: process.env.MONGODB_URL,
   JWT_REFRESH_KEY: process.env.JWT_REFRESH_KEY!,
   JWT_ACCESS_KEY: process.env.JWT_ACCESS_KEY!,
-  JWT_REFRESH_EXPIRED_IN: process.env.JWT_REFRESH_EXPIRED_IN as ms.StringValue,
-  JWT_ACCESS_EXPIRED_IN: process.env.JWT_ACCESS_EXPIRED_IN as ms.StringValue,
+  REFRESH_TOKEN_EXPIRED_IN: (process.env.REFRESH_TOKEN_EXPIRED_IN as ms.StringValue) || '7d',
+  ACCESS_TOKEN_EXPIRED_IN: (process.env.ACCESS_TOKEN_EXPIRED_IN as ms.StringValue) || '1h',
+  FRONTEND_URL: process.env.FRONTEND_URL,
 };

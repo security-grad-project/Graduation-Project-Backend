@@ -6,7 +6,7 @@ export const generateToken = (id: string, additionalPayload: object = {}): strin
   const payload = { id, ...additionalPayload };
 
   return jwt.sign(payload, config.JWT_ACCESS_KEY, {
-    expiresIn: config.JWT_ACCESS_EXPIRED_IN,
+    expiresIn: config.ACCESS_TOKEN_EXPIRED_IN,
   });
 };
 
@@ -23,7 +23,7 @@ export const generateRefreshToken = (id: string, additionalPayload: object = {})
   const payload = { id, ...additionalPayload };
 
   return jwt.sign(payload, config.JWT_REFRESH_KEY, {
-    expiresIn: config.JWT_REFRESH_EXPIRED_IN,
+    expiresIn: config.REFRESH_TOKEN_EXPIRED_IN,
   });
 };
 
