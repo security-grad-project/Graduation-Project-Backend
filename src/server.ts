@@ -18,7 +18,7 @@ process.on('uncaughtException', (err) => {
 const startServer = async () => {
   try {
     await testPostgresConnection();
-    // await mongoConnection();
+    await mongoConnection();
 
     // Start token cleanup job
     startTokenCleanupJob();
