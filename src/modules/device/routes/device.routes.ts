@@ -13,13 +13,12 @@ import {
   listDevicesQueryValidation,
 } from '../validation/device.validation';
 import validationMiddleware from '../../../common/middlewares/validation.middleware';
-import protect from '../../../common/middlewares/protect.middleware';
-import { restrictedTo } from '../../../common/middlewares/restrictedTo.middleware';
+import { authenticate, authorize } from '../../../common/middlewares';
 import { Role } from '@prisma/client';
 
 const router = express.Router();
 
-router.use(protect);
+router.use(authenticate);
 
 /**
  * @swagger
@@ -249,7 +248,132 @@ router.get('/stream', streamDevices);
  */
 router.get('/:id', getDeviceById);
 
-router.use(restrictedTo(Role.SOC_ADMIN));
+/**
+ * @swagger
+ * /api/v1/devices/stream:
+ *   get:
+ *     summary: Stream all devices
+ *     description: Stream devices as a JSON stream. Requires authentication. Useful for real-time data streaming.
+ *     tags: [Devices]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: userId
+ *         schema:
+ *           type: string
+ *         description: Filter by user ID
+ *       - in: query
+ *         name: ip
+ *         schema:
+ *           type: string
+ *         description: Filter by IP address
+ *       - in: query
+ *         name: hostName
+ *         schema:
+ *           type: string
+ *         description: Filter by hostname
+ *       - in: query
+ *         name: port
+ *         schema:
+ *           type: string
+ *         description: Filter by port
+ *       - in: query
+ *         name: createdAt
+ *         schema:
+ *           type: string
+ *         description: Filter by creation date
+ *     responses:
+ *       200:
+ *         description: Stream of device data
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: string
+ *               format: binary
+ *       401:
+ *         description: Unauthorized - Authentication required
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ */
+router.get('/stream', streamDevices);
+
+/**
+ * @swagger
+ * /api/v1/devices/{id}:
+ *   get:
+ *     summary: Get device by ID
+ *     description: Retrieve a single device by its ID. Requires authentication.
+ *     tags: [Devices]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Device ID
+ *       - in: query
+ *         name: includeServices
+ *         schema:
+ *           type: boolean
+ *           default: false
+ *         description: Include associated services in response
+ *       - in: query
+ *         name: includeAlerts
+ *         schema:
+ *           type: boolean
+ *           default: false
+ *         description: Include associated alerts in response
+ *     responses:
+ *       200:
+ *         description: Device retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: string
+ *                   example: success
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     id:
+ *                       type: string
+ *                     ip:
+ *                       type: string
+ *                     hostName:
+ *                       type: string
+ *                     port:
+ *                       type: integer
+ *                     userId:
+ *                       type: string
+ *                     createdAt:
+ *                       type: string
+ *                       format: date-time
+ *                     updatedAt:
+ *                       type: string
+ *                       format: date-time
+ *       401:
+ *         description: Unauthorized - Authentication required
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *       404:
+ *         description: Device not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ */
+router.get('/:id', getDeviceById);
+
+router.use(authorize(Role.SOC_ADMIN));
 
 /**
  * @swagger
