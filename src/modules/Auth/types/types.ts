@@ -19,3 +19,16 @@ export interface AnalystResponse {
   createdAt: Date;
   updatedAt: Date;
 }
+
+export interface LoginContext {
+  userAgent?: string;
+  ipAddress?: string;
+}
+
+export interface ActiveSession {
+  id: string;
+  userAgent: string | null;
+  ipAddress: string | null;
+  createdAt: Date;
+  expiresAt: Date;
+}

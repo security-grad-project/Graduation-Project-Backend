@@ -15,3 +15,11 @@ export const loginLimiter = rateLimit({
   legacyHeaders: false,
   message: 'Too many login attempts, please try again after 15 minutes',
 });
+
+export const refreshLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  limit: 30,
+  standardHeaders: 'draft-8',
+  legacyHeaders: false,
+  message: 'Too many token refresh attempts, please try again after 15 minutes',
+});
