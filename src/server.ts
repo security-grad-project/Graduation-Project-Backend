@@ -17,7 +17,7 @@ process.on('uncaughtException', (err) => {
 const startServer = async () => {
   try {
     await testPostgresConnection();
-    await mongoConnection();
+    // await mongoConnection();
 
     server = app.listen(PORT, () => {
       logger.info(`Server is running on port ${PORT}`);
