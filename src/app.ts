@@ -61,6 +61,7 @@ app.get('/', (req, res) => {
  * /health:
  *   get:
  *     summary: Health check endpoint
+ *     tags: [System]
  *     description: Check the health and uptime of the server
  *     responses:
  *       200:
@@ -81,6 +82,10 @@ app.get('/', (req, res) => {
  *                   type: string
  *                   format: date-time
  *                   example: 2024-01-15T20:00:00.000Z
+ *                 elasticsearch:
+ *                   type: string
+ *                   description: Connection status of Elasticsearch
+ *                   example: connected
  */
 app.get('/health', async (req, res) => {
   const elasticStatus = await elasticClient.ping().catch(() => false);
