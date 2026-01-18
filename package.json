@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "@elastic/elasticsearch": "^9.2.0",
     "@prisma/adapter-pg": "^7.0.0",
     "@prisma/client": "^7.0.0",
     "bcrypt": "^6.0.0",
@@ -15,9 +16,9 @@
     "mongoose": "^9.0.0",
     "morgan": "^1.10.1",
     "pg": "^8.16.3",
+    "rest-collection-stream": "^0.0.1",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.1",
-    "rest-collection-stream": "^0.0.1",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.3",
     "winston": "^3.18.3",
