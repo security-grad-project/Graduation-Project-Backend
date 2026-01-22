@@ -80,6 +80,7 @@ const swaggerDefinition: SwaggerDefinition = {
 const options: swaggerJsdoc.Options = {
   definition: swaggerDefinition,
   apis: [
+    path.join(__dirname, '../app.ts'),
     path.join(__dirname, '../routes/**/*.ts'),
     path.join(__dirname, '../modules/**/routes/*.ts'),
     path.join(__dirname, '../modules/**/controllers/*.ts'),

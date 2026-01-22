@@ -12,6 +12,7 @@ import { notFound } from './common/middlewares/index';
 import limiter from './config/limiter';
 import env from './config/env';
 import router from './routes/index';
+import { elasticClient } from './config/elasticsearch';
 
 const app = express();
 
@@ -60,6 +61,7 @@ app.get('/', (req, res) => {
  * /health:
  *   get:
  *     summary: Health check endpoint
+ *     tags: [System]
  *     description: Check the health and uptime of the server
  *     responses:
  *       200:
@@ -80,12 +82,19 @@ app.get('/', (req, res) => {
  *                   type: string
  *                   format: date-time
  *                   example: 2024-01-15T20:00:00.000Z
+ *                 elasticsearch:
+ *                   type: string
+ *                   description: Connection status of Elasticsearch
+ *                   example: connected
  */
-app.get('/health', (req, res) => {
+app.get('/health', async (req, res) => {
+  const elasticStatus = await elasticClient.ping().catch(() => false);
+
   res.status(200).json({
     status: 'OK',
     uptime: process.uptime(),
     timestamp: new Date().toISOString(),
+    elasticsearch: elasticStatus ? 'connected' : 'disconnected',
   });
 });
 
