@@ -4,7 +4,7 @@ import { Prisma } from '@prisma/client';
 
 interface ModelWithId {
   id: string;
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 export interface PaginationOptions {
@@ -36,11 +36,11 @@ export const comparePassword = async (password: string, hashedPassword: string) 
 
 export async function paginate<T, W extends Prisma.Enumerable<T>, I, S>(
   model: {
-    findMany: (args: any) => Promise<W[]>;
-    count: (args: any) => Promise<number>;
+    findMany: (args: unknown) => Promise<W[]>;
+    count: (args: unknown) => Promise<number>;
   },
   options: PaginationOptions = {},
-  where?: any,
+  where?: unknown,
   include?: I,
   select?: S,
 ): Promise<PaginatedResult<W>> {
@@ -49,12 +49,12 @@ export async function paginate<T, W extends Prisma.Enumerable<T>, I, S>(
   const skip = (page - 1) * limit;
   const take = limit;
 
-  const orderBy: any = {};
+  const orderBy: Record<string, string> = {};
   if (sortBy) {
     orderBy[sortBy] = sortOrder;
   }
 
-  const findManyArgs: any = {
+  const findManyArgs: Record<string, unknown> = {
     where,
     skip,
     take,
@@ -87,42 +87,42 @@ export async function paginate<T, W extends Prisma.Enumerable<T>, I, S>(
 }
 
 export const createPrismaStream = <T extends ModelWithId>(
-  model: any,
+  model: { findMany: (args: unknown) => Promise<T[]> },
   where: object = {},
   batchSize: number = 500,
 ): Readable => {
   async function* generator() {
-    try {
-      let lastId: string | undefined = undefined;
-      yield '[';
-      let isFirstBatch = true;
-      while (true) {
-        const items: T[] = await model.findMany({
-          take: batchSize,
-          where: {
-            ...where,
-            ...(lastId ? { id: { gt: lastId } } : {}),
-          },
-          orderBy: { id: 'asc' },
-        });
-        if (items.length === 0) break;
+    let lastId: string | undefined = undefined;
+    yield '[';
+    let isFirstBatch = true;
 
-        const batchString = JSON.stringify(items).slice(1, -1);
-        if (batchString.length > 0) {
-          if (isFirstBatch) {
-            yield batchString;
-            isFirstBatch = false;
-          } else {
-            yield `,${batchString}`;
-          }
+    while (true) {
+      const items: T[] = await model.findMany({
+        take: batchSize,
+        where: {
+          ...where,
+          ...(lastId ? { id: { gt: lastId } } : {}),
+        },
+        orderBy: { id: 'asc' },
+      });
+
+      if (items.length === 0) break;
+
+      const batchString = JSON.stringify(items).slice(1, -1);
+      if (batchString.length > 0) {
+        if (isFirstBatch) {
+          yield batchString;
+          isFirstBatch = false;
+        } else {
+          yield `,${batchString}`;
         }
-        lastId = items[items.length - 1].id;
-        if (items.length < batchSize) break;
       }
-      yield ']';
-    } catch (error) {
-      throw error;
+
+      lastId = items[items.length - 1].id;
+      if (items.length < batchSize) break;
     }
+
+    yield ']';
   }
 
   return Readable.from(generator());
