@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import catchAsync from '../../../common/utils/catchAsync';
 import { createRuleData, updateRuleData } from '../types/types';
-import { createRuleService, updateRuleService } from '../services/rule.service';
+import { createRuleService, deleteRuleService, updateRuleService } from '../services/rule.service';
 import { STATUS_CODE } from '../../../common/constants/responseCode';
 import { STATUS } from '../../../common/constants/responseStatus';
 
@@ -26,4 +26,10 @@ export const updateRule = catchAsync(async (req: Request, res: Response) => {
     data: rule,
     message: 'Rule updated successfully',
   });
+});
+
+export const deleteRule = catchAsync(async (req: Request, res: Response) => {
+  const id = req.params.id;
+  await deleteRuleService(id);
+  res.status(STATUS_CODE.NO_CONTENT).send();
 });

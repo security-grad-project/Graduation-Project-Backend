@@ -24,8 +24,19 @@ export const updateRuleService = async (id: string, data: updateRuleData) => {
   const rule = await prisma.rule.update({
     where: { id: id },
     data,
+    include: {
+      _count: {
+        select: { alerts: true },
+      },
+    },
   });
 
   logger.info(`rule updated successfully: id ${id}`);
   return rule;
+};
+
+export const deleteRuleService = async (id: string) => {
+  return await prisma.rule.delete({
+    where: { id: id },
+  });
 };

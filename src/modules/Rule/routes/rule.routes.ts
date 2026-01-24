@@ -2,9 +2,13 @@ import express from 'express';
 import * as z from 'zod';
 import { authenticate, authorize } from '../../../common/middlewares';
 import validationMiddleware from '../../../common/middlewares/validation.middleware';
-import { createRuleValidation, updateRuleValidation } from '../validation/rule.validation';
+import {
+  createRuleValidation,
+  deleteRuleValidation,
+  updateRuleValidation,
+} from '../validation/rule.validation';
 import { Role } from '@prisma/client';
-import { createRule, updateRule } from '../controllers/rule.controller';
+import { createRule, deleteRule, updateRule } from '../controllers/rule.controller';
 import { isRuleExistMiddleware, isRuleNameUniqueMiddleware } from '../middlewares/rule.middleware';
 
 const router = express.Router();
@@ -25,6 +29,13 @@ router.patch(
   isRuleExistMiddleware,
   isRuleNameUniqueMiddleware,
   updateRule,
+);
+
+router.delete(
+  '/:id',
+  validationMiddleware({ params: deleteRuleValidation }),
+  isRuleExistMiddleware,
+  deleteRule,
 );
 
 export default router;
