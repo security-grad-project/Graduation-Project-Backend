@@ -18,3 +18,17 @@ export const isRuleNameUniqueMiddleware = catchAsync(
     next();
   },
 );
+
+export const isRuleExistMiddleware = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const id = req.params.id;
+
+    const ruleExist = await prisma.rule.findUnique({
+      where: { id: id },
+    });
+
+    if (!ruleExist) return next(new ApiErrorHandler(404, 'Rule Not Found'));
+
+    next();
+  },
+);

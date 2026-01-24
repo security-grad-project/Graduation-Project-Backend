@@ -3,3 +3,5 @@ export interface createRuleData {
   description: string;
   type: string;
 }
+
+export type updateRuleData = Partial<createRuleData>;

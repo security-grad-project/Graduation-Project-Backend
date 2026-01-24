@@ -1,6 +1,6 @@
 import logger from '../../../common/utils/logger';
 import { prisma } from '../../../config/postgres';
-import { createRuleData } from '../types/types';
+import { createRuleData, updateRuleData } from '../types/types';
 
 export const createRuleService = async (data: createRuleData) => {
   const rule = await prisma.rule.create({
@@ -17,5 +17,15 @@ export const createRuleService = async (data: createRuleData) => {
   });
 
   logger.info(`rule created successfully: name ${rule.name}`);
+  return rule;
+};
+
+export const updateRuleService = async (id: string, data: updateRuleData) => {
+  const rule = await prisma.rule.update({
+    where: { id: id },
+    data,
+  });
+
+  logger.info(`rule updated successfully: id ${id}`);
   return rule;
 };
