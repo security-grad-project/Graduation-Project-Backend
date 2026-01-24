@@ -1,15 +1,17 @@
 import express from 'express';
-import { createService } from '../controllers/service.controller';
-import { createServiceValidation } from '../validations/service.validation';
+import { createService, updateService } from '../controllers/service.controller';
+import {
+  createServiceValidation,
+  updateServiceValidation,
+} from '../validations/service.validation';
 import validationMiddleware from '../../../common/middlewares/validation.middleware';
 import {
   checkDeviceExists,
   checkUserExists,
+  checkServiceExists,
 } from './../../../common/middlewares/checkExistence.middleware';
 
 import { authenticate, authorize } from '../../../common/middlewares';
-import { Service } from '@prisma/client';
-
 const router = express.Router();
 
 router.use(authenticate);
@@ -20,6 +22,15 @@ router.post(
   checkUserExists,
   checkDeviceExists,
   createService,
+);
+
+router.patch(
+  '/:id',
+  validationMiddleware({ body: updateServiceValidation }),
+  checkServiceExists,
+  checkUserExists,
+  checkDeviceExists,
+  updateService,
 );
 
 export default router;

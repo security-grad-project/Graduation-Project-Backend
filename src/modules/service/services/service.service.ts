@@ -16,3 +16,17 @@ export const createService = async (data: CreateServiceDto) => {
   logger.info(`Service created successfully: ID ${service.id}`);
   return service;
 };
+
+export const updateService = async (id: string, data: CreateServiceDto) => {
+  const service = await prisma.service.update({
+    data: {
+      ...data,
+    },
+    where: {
+      id,
+    },
+  });
+
+  logger.info(`Service updated successfully: ID ${service.id}`);
+  return service;
+};
