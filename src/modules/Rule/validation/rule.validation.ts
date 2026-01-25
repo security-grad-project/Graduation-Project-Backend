@@ -19,14 +19,15 @@ export const deleteRuleValidation = z.object({
 });
 
 export const queryRulesValidation = z.object({
-  name: z.string().min(3).max(100).trim().optional(),
   type: z
-    .enum(['threshold', 'anomaly', 'pattern', 'condition'])
+    .enum(['threshold', 'anomaly', 'pattern', 'condition', 'schedule', 'composite'])
     .transform((val) => val.toUpperCase())
     .optional(),
   page: z.coerce.number().int().min(1).default(1).optional(),
   limit: z.coerce.number().int().min(1).max(100).default(10).optional(),
-  search: z.string().optional(),
+  search: z.string().min(1).optional(),
   sortBy: z.enum(['name', 'type', 'createdAt', 'updatedAt']).optional(),
   sortOrder: z.enum(['asc', 'desc']).optional(),
+  includeAlerts: z.coerce.boolean().optional(),
+  includeCount: z.coerce.boolean().default(true).optional(),
 });

@@ -1,7 +1,9 @@
 import logger from '../../../common/utils/logger';
 import { prisma } from '../../../config/postgres';
-import { createRuleData, GetRuleQueryOption, updateRuleData } from '../types/types';
+import { createRuleData, GetRuleQueryOption, ListRulesQuery, updateRuleData } from '../types/types';
 import ApiErrorHandler from '../../../common/utils/ApiErrorHandler';
+import { buildRuleFilter } from './rule.utils';
+import { paginate } from '../../../common/utils/primsa-util';
 
 export const createRuleService = async (data: createRuleData) => {
   const rule = await prisma.rule.create({
@@ -57,4 +59,27 @@ export const getRuleService = async (id: string, option: GetRuleQueryOption = {}
 
   logger.info(`rule got successfully: id ${id}`);
   return rule;
+};
+
+export const getAllRulesService = async (query: ListRulesQuery) => {
+  const where = buildRuleFilter({
+    type: query.type,
+    search: query.search,
+  });
+
+  const inclusions: any = {};
+  if (query.includeCount) inclusions._count = { select: { alerts: true } };
+  if (query.includeAlerts) inclusions.alerts = true;
+
+  return await paginate(
+    prisma.rule,
+    {
+      page: query.page,
+      limit: query.limit,
+      sortBy: query.sortBy,
+      sortOrder: query.sortOrder,
+    },
+    where,
+    Object.keys(inclusions).length > 0 ? inclusions : undefined,
+  );
 };

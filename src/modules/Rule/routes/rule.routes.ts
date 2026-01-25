@@ -6,10 +6,17 @@ import {
   createRuleValidation,
   deleteRuleValidation,
   getRuleValidation,
+  queryRulesValidation,
   updateRuleValidation,
 } from '../validation/rule.validation';
 import { Role } from '@prisma/client';
-import { createRule, deleteRule, getRuleById, updateRule } from '../controllers/rule.controller';
+import {
+  createRule,
+  deleteRule,
+  getRuleById,
+  getAllRules,
+  updateRule,
+} from '../controllers/rule.controller';
 import { isRuleExistMiddleware, isRuleNameUniqueMiddleware } from '../middlewares/rule.middleware';
 
 const router = express.Router();
@@ -40,5 +47,7 @@ router.delete(
   isRuleExistMiddleware,
   deleteRule,
 );
+
+router.get('/', validationMiddleware({ query: queryRulesValidation }), getAllRules);
 
 export default router;

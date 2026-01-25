@@ -9,5 +9,5 @@ const router = express.Router();
 router.use('/auth', authRoutes);
 router.use('/system', systemRoutes);
 router.use('/devices', deviceRoutes);
-router.use('/rule', ruleRoutes);
+router.use('/rules', ruleRoutes);
 export default router;
