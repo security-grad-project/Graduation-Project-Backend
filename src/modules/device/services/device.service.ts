@@ -60,7 +60,6 @@ export const listDevicesService = async (query: ListDevicesQueryDto) => {
   } as any);
 
   return await paginate(
-    // @ts-ignore
     prisma.device,
     {
       page: query.page,
@@ -78,6 +77,5 @@ export const streamAllDevicesService = (query: {
   hostName?: string;
 }) => {
   const where = buildDeviceFilter(query as any);
-  // @ts-ignore
   return createPrismaStream(prisma.device, where, 3);
 };

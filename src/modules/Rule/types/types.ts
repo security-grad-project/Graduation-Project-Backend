@@ -5,3 +5,7 @@ export interface createRuleData {
 }
 
 export type updateRuleData = Partial<createRuleData>;
+
+export interface GetRuleQueryOption {
+  includeAlerts?: boolean;
+}

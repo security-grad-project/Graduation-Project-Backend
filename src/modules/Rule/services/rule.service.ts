@@ -1,6 +1,6 @@
 import logger from '../../../common/utils/logger';
 import { prisma } from '../../../config/postgres';
-import { createRuleData, updateRuleData } from '../types/types';
+import { createRuleData, GetRuleQueryOption, updateRuleData } from '../types/types';
 import ApiErrorHandler from '../../../common/utils/ApiErrorHandler';
 
 export const createRuleService = async (data: createRuleData) => {
@@ -42,11 +42,15 @@ export const deleteRuleService = async (id: string) => {
   });
 };
 
-export const getRuleService = async (id: string) => {
+export const getRuleService = async (id: string, option: GetRuleQueryOption = {}) => {
+  const { includeAlerts } = option;
   const rule = await prisma.rule.findUnique({
     where: { id: id },
     include: {
-      alerts: true,
+      _count: {
+        select: { alerts: true },
+      },
+      alerts: includeAlerts,
     },
   });
   if (!rule) throw new ApiErrorHandler(404, 'Rule Not Found');
