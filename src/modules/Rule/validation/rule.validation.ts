@@ -31,3 +31,14 @@ export const queryRulesValidation = z.object({
   includeAlerts: z.coerce.boolean().optional(),
   includeCount: z.coerce.boolean().default(true).optional(),
 });
+
+export const getRulesByTypeParamsValidation = z.object({
+  type: z
+    .enum(['threshold', 'anomaly', 'pattern', 'condition', 'schedule', 'composite'])
+    .transform((val) => val.toUpperCase()),
+});
+
+export const getRulesByTypeQueriesValidation = z.object({
+  page: z.coerce.number().int().min(1).default(1).optional(),
+  limit: z.coerce.number().int().min(1).max(100).default(10).optional(),
+});

@@ -1,12 +1,13 @@
 import { Request, Response } from 'express';
 import catchAsync from '../../../common/utils/catchAsync';
-import { createRuleData, ListRulesQuery, updateRuleData } from '../types/types';
+import { createRuleData, ListRulesQuery, RulesByType, updateRuleData } from '../types/types';
 import {
   createRuleService,
   deleteRuleService,
   getRuleService,
   getAllRulesService,
   updateRuleService,
+  getRulesByTypesService,
 } from '../services/rule.service';
 import { STATUS_CODE } from '../../../common/constants/responseCode';
 import { STATUS } from '../../../common/constants/responseStatus';
@@ -54,6 +55,18 @@ export const getRuleById = catchAsync(async (req: Request, res: Response) => {
 export const getAllRules = catchAsync(async (req: Request, res: Response) => {
   const query: ListRulesQuery = req.query as unknown as ListRulesQuery;
   const rules = await getAllRulesService(query);
+
+  res.status(STATUS_CODE.SUCCESS).json({
+    status: STATUS.SUCCESS,
+    data: rules.data,
+    meta: rules.meta,
+  });
+});
+
+export const getRulesByType = catchAsync(async (req: Request, res: Response) => {
+  const type = req.params.type;
+  const query: RulesByType = req.query as unknown as RulesByType;
+  const rules = await getRulesByTypesService(type, query);
 
   res.status(STATUS_CODE.SUCCESS).json({
     status: STATUS.SUCCESS,

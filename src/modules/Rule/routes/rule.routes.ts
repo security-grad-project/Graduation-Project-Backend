@@ -5,6 +5,8 @@ import validationMiddleware from '../../../common/middlewares/validation.middlew
 import {
   createRuleValidation,
   deleteRuleValidation,
+  getRulesByTypeParamsValidation,
+  getRulesByTypeQueriesValidation,
   getRuleValidation,
   queryRulesValidation,
   updateRuleValidation,
@@ -16,6 +18,7 @@ import {
   getRuleById,
   getAllRules,
   updateRule,
+  getRulesByType,
 } from '../controllers/rule.controller';
 import { isRuleExistMiddleware, isRuleNameUniqueMiddleware } from '../middlewares/rule.middleware';
 
@@ -49,5 +52,14 @@ router.delete(
 );
 
 router.get('/', validationMiddleware({ query: queryRulesValidation }), getAllRules);
+
+router.get(
+  '/type/:type',
+  validationMiddleware({
+    params: getRulesByTypeParamsValidation,
+    query: getRulesByTypeQueriesValidation,
+  }),
+  getRulesByType,
+);
 
 export default router;

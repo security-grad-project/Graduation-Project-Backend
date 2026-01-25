@@ -20,3 +20,8 @@ export interface ListRulesQuery {
   includeAlerts?: boolean;
   includeCount?: boolean;
 }
+
+export interface RulesByType {
+  page: number;
+  limit: number;
+}

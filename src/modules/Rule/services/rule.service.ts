@@ -1,6 +1,12 @@
 import logger from '../../../common/utils/logger';
 import { prisma } from '../../../config/postgres';
-import { createRuleData, GetRuleQueryOption, ListRulesQuery, updateRuleData } from '../types/types';
+import {
+  createRuleData,
+  GetRuleQueryOption,
+  ListRulesQuery,
+  RulesByType,
+  updateRuleData,
+} from '../types/types';
 import ApiErrorHandler from '../../../common/utils/ApiErrorHandler';
 import { buildRuleFilter } from './rule.utils';
 import { paginate } from '../../../common/utils/primsa-util';
@@ -81,5 +87,17 @@ export const getAllRulesService = async (query: ListRulesQuery) => {
     },
     where,
     Object.keys(inclusions).length > 0 ? inclusions : undefined,
+  );
+};
+
+export const getRulesByTypesService = async (type: string, query: RulesByType) => {
+  const where = { type };
+  return await paginate(
+    prisma.rule,
+    {
+      page: query.page,
+      limit: query.limit,
+    },
+    where,
   );
 };
