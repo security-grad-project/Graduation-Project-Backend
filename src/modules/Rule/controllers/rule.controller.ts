@@ -1,7 +1,12 @@
 import { Request, Response } from 'express';
 import catchAsync from '../../../common/utils/catchAsync';
 import { createRuleData, updateRuleData } from '../types/types';
-import { createRuleService, deleteRuleService, updateRuleService } from '../services/rule.service';
+import {
+  createRuleService,
+  deleteRuleService,
+  getRuleService,
+  updateRuleService,
+} from '../services/rule.service';
 import { STATUS_CODE } from '../../../common/constants/responseCode';
 import { STATUS } from '../../../common/constants/responseStatus';
 
@@ -32,4 +37,15 @@ export const deleteRule = catchAsync(async (req: Request, res: Response) => {
   const id = req.params.id;
   await deleteRuleService(id);
   res.status(STATUS_CODE.NO_CONTENT).send();
+});
+
+export const getRuleById = catchAsync(async (req: Request, res: Response) => {
+  const id = req.params.id;
+  const rule = await getRuleService(id);
+
+  res.status(STATUS_CODE.SUCCESS).json({
+    status: STATUS.SUCCESS,
+    data: rule,
+    message: 'Rule got successfully',
+  });
 });

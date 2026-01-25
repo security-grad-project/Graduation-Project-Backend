@@ -5,10 +5,11 @@ import validationMiddleware from '../../../common/middlewares/validation.middlew
 import {
   createRuleValidation,
   deleteRuleValidation,
+  getRuleValidation,
   updateRuleValidation,
 } from '../validation/rule.validation';
 import { Role } from '@prisma/client';
-import { createRule, deleteRule, updateRule } from '../controllers/rule.controller';
+import { createRule, deleteRule, getRuleById, updateRule } from '../controllers/rule.controller';
 import { isRuleExistMiddleware, isRuleNameUniqueMiddleware } from '../middlewares/rule.middleware';
 
 const router = express.Router();
@@ -30,6 +31,8 @@ router.patch(
   isRuleNameUniqueMiddleware,
   updateRule,
 );
+
+router.get('/:id', validationMiddleware({ params: getRuleValidation }), getRuleById);
 
 router.delete(
   '/:id',
