@@ -36,8 +36,8 @@ export const comparePassword = async (password: string, hashedPassword: string) 
 
 export async function paginate<T, W extends Prisma.Enumerable<T>, I, S>(
   model: {
-    findMany: (args: unknown) => Promise<W[]>;
-    count: (args: unknown) => Promise<number>;
+    findMany: (args: any) => Promise<W[]>;
+    count: (args: any) => Promise<number>;
   },
   options: PaginationOptions = {},
   where?: unknown,
@@ -87,7 +87,7 @@ export async function paginate<T, W extends Prisma.Enumerable<T>, I, S>(
 }
 
 export const createPrismaStream = <T extends ModelWithId>(
-  model: { findMany: (args: unknown) => Promise<T[]> },
+  model: { findMany: (args: any) => Promise<T[]> },
   where: object = {},
   batchSize: number = 500,
 ): Readable => {
