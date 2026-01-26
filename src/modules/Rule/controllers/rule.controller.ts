@@ -18,6 +18,7 @@ import {
   updateFullRuleService,
   countRulesService,
   duplicateRuleService,
+  bulkCreateRulesService,
 } from '../services/rule.service';
 import { STATUS_CODE } from '../../../common/constants/responseCode';
 import { STATUS } from '../../../common/constants/responseStatus';
@@ -128,5 +129,16 @@ export const duplicateRule = catchAsync(async (req: Request, res: Response) => {
     status: STATUS.SUCCESS,
     data: rule,
     message: 'Rule duplicated successfully',
+  });
+});
+
+export const bulkCreateRules = catchAsync(async (req: Request, res: Response) => {
+  const rules: createRuleData[] = req.body.rules as createRuleData[];
+  const results = await bulkCreateRulesService(rules);
+
+  res.status(STATUS_CODE.CREATED).json({
+    status: STATUS.SUCCESS,
+    data: results,
+    message: 'Rules created successfully',
   });
 });

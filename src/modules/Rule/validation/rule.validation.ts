@@ -46,3 +46,21 @@ export const getRulesByTypeQueriesValidation = z.object({
 export const duplicateRuleValidation = z.object({
   name: z.string().min(3).max(100).trim(),
 });
+
+export const bulkCreateRulesValidation = z.object({
+  rules: z
+    .array(
+      z.object({
+        name: z.string().min(3).max(100).trim(),
+        description: z.string().min(10).max(500).trim(),
+        type: z
+          .enum(['threshold', 'anomaly', 'pattern', 'condition', 'schedule', 'composite'])
+          .transform((val) => val.toUpperCase()),
+      }),
+    )
+    .min(1),
+});
+
+export const bulkDeleteRulesValidation = z.object({
+  ids: z.array(z.object({ id: z.uuid() })),
+});

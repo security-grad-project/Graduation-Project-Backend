@@ -2,6 +2,7 @@ import express from 'express';
 import { authenticate, authorize } from '../../../common/middlewares';
 import validationMiddleware from '../../../common/middlewares/validation.middleware';
 import {
+  bulkCreateRulesValidation,
   createRuleValidation,
   deleteRuleValidation,
   duplicateRuleValidation,
@@ -23,6 +24,7 @@ import {
   updateFullRule,
   getStats,
   duplicateRule,
+  bulkCreateRules,
 } from '../controllers/rule.controller';
 import { isRuleExistMiddleware, isRuleNameUniqueMiddleware } from '../middlewares/rule.middleware';
 
@@ -88,4 +90,5 @@ router.post(
   duplicateRule,
 );
 
+router.post('/bulk', validationMiddleware({ body: bulkCreateRulesValidation }), bulkCreateRules);
 export default router;

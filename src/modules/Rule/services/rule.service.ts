@@ -164,3 +164,10 @@ export const duplicateRuleService = async (id: string, name: string) => {
   });
   return duplicateRule;
 };
+
+export const bulkCreateRulesService = async (rules: createRuleData[]) => {
+  return await prisma.rule.createMany({
+    data: rules,
+    skipDuplicates: true,
+  });
+};
