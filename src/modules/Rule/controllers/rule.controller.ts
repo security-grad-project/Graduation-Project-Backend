@@ -8,6 +8,7 @@ import {
   getAllRulesService,
   updateRuleService,
   getRulesByTypesService,
+  getRuleWithAlertsService,
 } from '../services/rule.service';
 import { STATUS_CODE } from '../../../common/constants/responseCode';
 import { STATUS } from '../../../common/constants/responseStatus';
@@ -72,5 +73,16 @@ export const getRulesByType = catchAsync(async (req: Request, res: Response) => 
     status: STATUS.SUCCESS,
     data: rules.data,
     meta: rules.meta,
+  });
+});
+
+export const getRuleWithAllAlerts = catchAsync(async (req: Request, res: Response) => {
+  const id = req.params.id;
+  const rule = await getRuleWithAlertsService(id);
+
+  res.status(STATUS_CODE.SUCCESS).json({
+    status: STATUS.SUCCESS,
+    data: rule,
+    message: 'Rule got successfully',
   });
 });

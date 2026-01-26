@@ -101,3 +101,19 @@ export const getRulesByTypesService = async (type: string, query: RulesByType) =
     where,
   );
 };
+
+export const getRuleWithAlertsService = async (id: string) => {
+  const rule = await prisma.rule.findUnique({
+    where: { id: id },
+    include: {
+      _count: {
+        select: { alerts: true },
+      },
+      alerts: true,
+    },
+  });
+  if (!rule) throw new ApiErrorHandler(404, 'Rule Not Found');
+
+  logger.info(`rule got successfully: id ${id}`);
+  return rule;
+};

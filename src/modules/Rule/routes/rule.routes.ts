@@ -19,6 +19,7 @@ import {
   getAllRules,
   updateRule,
   getRulesByType,
+  getRuleWithAllAlerts,
 } from '../controllers/rule.controller';
 import { isRuleExistMiddleware, isRuleNameUniqueMiddleware } from '../middlewares/rule.middleware';
 
@@ -60,6 +61,12 @@ router.get(
     query: getRulesByTypeQueriesValidation,
   }),
   getRulesByType,
+);
+
+router.get(
+  '/:id/alerts',
+  validationMiddleware({ params: getRuleValidation }),
+  getRuleWithAllAlerts,
 );
 
 export default router;
