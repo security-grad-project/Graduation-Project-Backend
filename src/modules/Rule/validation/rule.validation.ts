@@ -4,7 +4,7 @@ export const createRuleValidation = z.object({
   name: z.string().min(3).max(100).trim(),
   description: z.string().min(10).max(500).trim(),
   type: z
-    .enum(['threshold', 'anomaly', 'pattern', 'condition'])
+    .enum(['threshold', 'anomaly', 'pattern', 'condition', 'schedule', 'composite'])
     .transform((val) => val.toUpperCase()),
 });
 

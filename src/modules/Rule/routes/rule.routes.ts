@@ -1,5 +1,4 @@
 import express from 'express';
-import * as z from 'zod';
 import { authenticate, authorize } from '../../../common/middlewares';
 import validationMiddleware from '../../../common/middlewares/validation.middleware';
 import {
@@ -20,6 +19,7 @@ import {
   updateRule,
   getRulesByType,
   getRuleWithAllAlerts,
+  updateFullRule,
 } from '../controllers/rule.controller';
 import { isRuleExistMiddleware, isRuleNameUniqueMiddleware } from '../middlewares/rule.middleware';
 
@@ -37,7 +37,7 @@ router.post(
 
 router.patch(
   '/:id',
-  validationMiddleware({ params: z.object({ id: z.uuid() }), body: updateRuleValidation }),
+  validationMiddleware({ params: getRuleValidation, body: updateRuleValidation }),
   isRuleExistMiddleware,
   isRuleNameUniqueMiddleware,
   updateRule,
@@ -69,4 +69,11 @@ router.get(
   getRuleWithAllAlerts,
 );
 
+router.put(
+  '/:id',
+  validationMiddleware({ params: getRuleValidation, body: createRuleValidation }),
+  isRuleExistMiddleware,
+  isRuleNameUniqueMiddleware,
+  updateFullRule,
+);
 export default router;

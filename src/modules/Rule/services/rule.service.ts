@@ -117,3 +117,18 @@ export const getRuleWithAlertsService = async (id: string) => {
   logger.info(`rule got successfully: id ${id}`);
   return rule;
 };
+
+export const updateFullRuleService = async (id: string, data: createRuleData) => {
+  const rule = await prisma.rule.update({
+    where: { id: id },
+    data,
+    include: {
+      _count: {
+        select: { alerts: true },
+      },
+    },
+  });
+
+  logger.info(`rule updated successfully: id ${id}`);
+  return rule;
+};
