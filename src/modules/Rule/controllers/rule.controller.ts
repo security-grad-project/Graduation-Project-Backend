@@ -17,6 +17,7 @@ import {
   getRuleWithAlertsService,
   updateFullRuleService,
   countRulesService,
+  duplicateRuleService,
 } from '../services/rule.service';
 import { STATUS_CODE } from '../../../common/constants/responseCode';
 import { STATUS } from '../../../common/constants/responseStatus';
@@ -115,5 +116,17 @@ export const getStats = catchAsync(async (req: Request, res: Response) => {
     status: STATUS.SUCCESS,
     data: stats,
     message: 'Rules stats got successfully',
+  });
+});
+
+export const duplicateRule = catchAsync(async (req: Request, res: Response) => {
+  const id = req.params.id;
+  const name = req.body.name;
+  const rule = await duplicateRuleService(id, name);
+
+  res.status(STATUS_CODE.CREATED).json({
+    status: STATUS.SUCCESS,
+    data: rule,
+    message: 'Rule duplicated successfully',
   });
 });

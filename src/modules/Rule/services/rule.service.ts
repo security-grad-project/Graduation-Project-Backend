@@ -142,3 +142,25 @@ export const countRulesService = async (query: countRulesQuery) => {
 
   return await prisma.rule.count({ where });
 };
+
+export const duplicateRuleService = async (id: string, name: string) => {
+  const rule = await prisma.rule.findUnique({
+    where: { id: id },
+  });
+
+  if (!rule) throw new ApiErrorHandler(404, 'Rule Not Found');
+
+  const duplicateRule = await prisma.rule.create({
+    data: {
+      name,
+      description: rule.description,
+      type: rule.type,
+    },
+    include: {
+      _count: {
+        select: { alerts: true },
+      },
+    },
+  });
+  return duplicateRule;
+};

@@ -4,6 +4,7 @@ import validationMiddleware from '../../../common/middlewares/validation.middlew
 import {
   createRuleValidation,
   deleteRuleValidation,
+  duplicateRuleValidation,
   getRulesByTypeParamsValidation,
   getRulesByTypeQueriesValidation,
   getRuleValidation,
@@ -21,6 +22,7 @@ import {
   getRuleWithAllAlerts,
   updateFullRule,
   getStats,
+  duplicateRule,
 } from '../controllers/rule.controller';
 import { isRuleExistMiddleware, isRuleNameUniqueMiddleware } from '../middlewares/rule.middleware';
 
@@ -77,6 +79,13 @@ router.put(
   isRuleExistMiddleware,
   isRuleNameUniqueMiddleware,
   updateFullRule,
+);
+
+router.post(
+  '/:id/duplicate',
+  validationMiddleware({ params: getRuleValidation, body: duplicateRuleValidation }),
+  isRuleNameUniqueMiddleware,
+  duplicateRule,
 );
 
 export default router;
