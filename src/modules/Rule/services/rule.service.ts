@@ -171,3 +171,9 @@ export const bulkCreateRulesService = async (rules: createRuleData[]) => {
     skipDuplicates: true,
   });
 };
+
+export const bulkDeleteRulesService = async (ids: string[]) => {
+  return await prisma.rule.deleteMany({
+    where: { id: { in: ids } },
+  });
+};

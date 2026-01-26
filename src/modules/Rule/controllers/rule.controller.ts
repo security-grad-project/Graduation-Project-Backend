@@ -19,6 +19,7 @@ import {
   countRulesService,
   duplicateRuleService,
   bulkCreateRulesService,
+  bulkDeleteRulesService,
 } from '../services/rule.service';
 import { STATUS_CODE } from '../../../common/constants/responseCode';
 import { STATUS } from '../../../common/constants/responseStatus';
@@ -141,4 +142,11 @@ export const bulkCreateRules = catchAsync(async (req: Request, res: Response) =>
     data: results,
     message: 'Rules created successfully',
   });
+});
+
+export const bulkDeleteRules = catchAsync(async (req: Request, res: Response) => {
+  const ids: string[] = req.body.ids as string[];
+  await bulkDeleteRulesService(ids);
+
+  res.status(STATUS_CODE.NO_CONTENT).send();
 });

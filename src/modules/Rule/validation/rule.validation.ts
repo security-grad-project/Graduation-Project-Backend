@@ -62,5 +62,5 @@ export const bulkCreateRulesValidation = z.object({
 });
 
 export const bulkDeleteRulesValidation = z.object({
-  ids: z.array(z.object({ id: z.uuid() })),
+  ids: z.array(z.uuid()).min(1),
 });

@@ -3,6 +3,7 @@ import { authenticate, authorize } from '../../../common/middlewares';
 import validationMiddleware from '../../../common/middlewares/validation.middleware';
 import {
   bulkCreateRulesValidation,
+  bulkDeleteRulesValidation,
   createRuleValidation,
   deleteRuleValidation,
   duplicateRuleValidation,
@@ -25,6 +26,7 @@ import {
   getStats,
   duplicateRule,
   bulkCreateRules,
+  bulkDeleteRules,
 } from '../controllers/rule.controller';
 import { isRuleExistMiddleware, isRuleNameUniqueMiddleware } from '../middlewares/rule.middleware';
 
@@ -48,6 +50,9 @@ router.patch(
   updateRule,
 );
 router.get('/stats', validationMiddleware({ query: queryRulesValidation }), getStats);
+
+router.post('/bulk', validationMiddleware({ body: bulkCreateRulesValidation }), bulkCreateRules);
+router.delete('/bulk', validationMiddleware({ body: bulkDeleteRulesValidation }), bulkDeleteRules);
 
 router.get('/:id', validationMiddleware({ params: getRuleValidation }), getRuleById);
 
@@ -90,5 +95,4 @@ router.post(
   duplicateRule,
 );
 
-router.post('/bulk', validationMiddleware({ body: bulkCreateRulesValidation }), bulkCreateRules);
 export default router;
