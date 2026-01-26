@@ -64,7 +64,7 @@ export const getRuleService = async (id: string, option: GetRuleQueryOption = {}
   });
   if (!rule) throw new ApiErrorHandler(404, 'Rule Not Found');
 
-  logger.info(`rule got successfully: id ${id}`);
+  logger.info(`rule retrieved successfully: id ${id}`);
   return rule;
 };
 
@@ -115,7 +115,7 @@ export const getRuleWithAlertsService = async (id: string) => {
   });
   if (!rule) throw new ApiErrorHandler(404, 'Rule Not Found');
 
-  logger.info(`rule got successfully: id ${id}`);
+  logger.info(`rule retrieved successfully: id ${id}`);
   return rule;
 };
 

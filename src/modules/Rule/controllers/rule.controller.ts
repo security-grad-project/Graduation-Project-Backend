@@ -60,7 +60,7 @@ export const getRuleById = catchAsync(async (req: Request, res: Response) => {
   res.status(STATUS_CODE.SUCCESS).json({
     status: STATUS.SUCCESS,
     data: rule,
-    message: 'Rule got successfully',
+    message: 'Rule retrieved successfully',
   });
 });
 
@@ -94,7 +94,7 @@ export const getRuleWithAllAlerts = catchAsync(async (req: Request, res: Respons
   res.status(STATUS_CODE.SUCCESS).json({
     status: STATUS.SUCCESS,
     data: rule,
-    message: 'Rule got successfully',
+    message: 'Rule retrieved successfully',
   });
 });
 
@@ -117,7 +117,7 @@ export const getStats = catchAsync(async (req: Request, res: Response) => {
   res.status(STATUS_CODE.SUCCESS).json({
     status: STATUS.SUCCESS,
     data: stats,
-    message: 'Rules stats got successfully',
+    message: 'Rules stats retrieved successfully',
   });
 });
 

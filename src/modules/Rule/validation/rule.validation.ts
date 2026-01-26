@@ -1,11 +1,11 @@
 import * as z from 'zod';
 
+const validRuleTypes = ['threshold', 'anomaly', 'pattern', 'condition', 'schedule', 'composite'];
+
 export const createRuleValidation = z.object({
   name: z.string().min(3).max(100).trim(),
   description: z.string().min(10).max(500).trim(),
-  type: z
-    .enum(['threshold', 'anomaly', 'pattern', 'condition', 'schedule', 'composite'])
-    .transform((val) => val.toUpperCase()),
+  type: z.enum(validRuleTypes).transform((val) => val.toUpperCase()),
 });
 
 export const updateRuleValidation = createRuleValidation.partial();
@@ -20,7 +20,7 @@ export const deleteRuleValidation = z.object({
 
 export const queryRulesValidation = z.object({
   type: z
-    .enum(['threshold', 'anomaly', 'pattern', 'condition', 'schedule', 'composite'])
+    .enum(validRuleTypes)
     .transform((val) => val.toUpperCase())
     .optional(),
   page: z.coerce.number().int().min(1).default(1).optional(),
@@ -33,9 +33,7 @@ export const queryRulesValidation = z.object({
 });
 
 export const getRulesByTypeParamsValidation = z.object({
-  type: z
-    .enum(['threshold', 'anomaly', 'pattern', 'condition', 'schedule', 'composite'])
-    .transform((val) => val.toUpperCase()),
+  type: z.enum(validRuleTypes).transform((val) => val.toUpperCase()),
 });
 
 export const getRulesByTypeQueriesValidation = z.object({
@@ -53,9 +51,7 @@ export const bulkCreateRulesValidation = z.object({
       z.object({
         name: z.string().min(3).max(100).trim(),
         description: z.string().min(10).max(500).trim(),
-        type: z
-          .enum(['threshold', 'anomaly', 'pattern', 'condition', 'schedule', 'composite'])
-          .transform((val) => val.toUpperCase()),
+        type: z.enum(validRuleTypes).transform((val) => val.toUpperCase()),
       }),
     )
     .min(1),
