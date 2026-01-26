@@ -20,6 +20,7 @@ import {
   getRulesByType,
   getRuleWithAllAlerts,
   updateFullRule,
+  getStats,
 } from '../controllers/rule.controller';
 import { isRuleExistMiddleware, isRuleNameUniqueMiddleware } from '../middlewares/rule.middleware';
 
@@ -42,6 +43,7 @@ router.patch(
   isRuleNameUniqueMiddleware,
   updateRule,
 );
+router.get('/stats', validationMiddleware({ query: queryRulesValidation }), getStats);
 
 router.get('/:id', validationMiddleware({ params: getRuleValidation }), getRuleById);
 
@@ -76,4 +78,5 @@ router.put(
   isRuleNameUniqueMiddleware,
   updateFullRule,
 );
+
 export default router;

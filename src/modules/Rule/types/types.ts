@@ -25,3 +25,8 @@ export interface RulesByType {
   page: number;
   limit: number;
 }
+
+export interface countRulesQuery {
+  type?: string;
+  search?: string;
+}

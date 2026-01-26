@@ -1,6 +1,7 @@
 import logger from '../../../common/utils/logger';
 import { prisma } from '../../../config/postgres';
 import {
+  countRulesQuery,
   createRuleData,
   GetRuleQueryOption,
   ListRulesQuery,
@@ -131,4 +132,13 @@ export const updateFullRuleService = async (id: string, data: createRuleData) =>
 
   logger.info(`rule updated successfully: id ${id}`);
   return rule;
+};
+
+export const countRulesService = async (query: countRulesQuery) => {
+  const where = buildRuleFilter({
+    type: query.type,
+    search: query.search,
+  });
+
+  return await prisma.rule.count({ where });
 };
