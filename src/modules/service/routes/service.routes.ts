@@ -1,5 +1,5 @@
 import express from 'express';
-import { createService, updateService } from '../controllers/service.controller';
+import { createService, updateService, getDeviceById } from '../controllers/service.controller';
 import {
   createServiceValidation,
   updateServiceValidation,
@@ -33,4 +33,5 @@ router.patch(
   updateService,
 );
 
+router.get('/:id', getDeviceById);
 export default router;

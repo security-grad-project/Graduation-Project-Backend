@@ -30,3 +30,18 @@ export const updateService = catchAsync(async (req: Request, res: Response) => {
     data: service,
   });
 });
+
+export const getDeviceById = catchAsync(async (req: Request, res: Response) => {
+  const serviceId = req.params.id;
+  const { includeDeviceData, includeUserData } = req.query;
+  // @ts-ignore
+  const service = await serviceService.getServiceByIdService(serviceId, {
+    includeDeviceData: includeDeviceData === 'true',
+    includeUserData: includeUserData === 'true',
+  });
+
+  res.status(STATUS_CODE.SUCCESS).json({
+    status: STATUS.SUCCESS,
+    service: service,
+  });
+});

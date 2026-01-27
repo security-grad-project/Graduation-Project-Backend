@@ -24,12 +24,12 @@ export const queryServicesValidation = z.object({
   sortOrder: z.enum(['asc', 'desc']).optional(),
   startDate: z.coerce.date().optional(),
   endDate: z.coerce.date().optional(),
-  includeUserData: z
-    .enum(['true', 'false'])
-    .optional()
-    .transform((val) => val === 'true'),
-  includeDeviceData: z
-    .enum(['true', 'false'])
-    .optional()
-    .transform((val) => val === 'true'),
+  // includeUserData: z
+  //   .enum(['true', 'false'])
+  //   .optional()
+  //   .transform((val) => val === 'true'),
+  // includeDeviceData: z
+  //   .enum(['true', 'false'])
+  //   .optional()
+  //   .transform((val) => val === 'true'),
 });
