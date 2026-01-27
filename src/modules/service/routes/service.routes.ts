@@ -8,8 +8,8 @@ import validationMiddleware from '../../../common/middlewares/validation.middlew
 import {
   checkDeviceExists,
   checkUserExists,
-  checkServiceExists,
 } from './../../../common/middlewares/checkExistence.middleware';
+import { checkServiceExists } from '../middlewares/service.middleware';
 
 import { authenticate, authorize } from '../../../common/middlewares';
 const router = express.Router();
