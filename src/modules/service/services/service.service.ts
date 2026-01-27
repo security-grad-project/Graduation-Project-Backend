@@ -7,7 +7,7 @@ import { GetServiceQueryOptions } from '../types/service.types';
 import { ListServicesQueryDto } from '../dto/list-service-query.dto';
 import { buildServiceFilter } from './service.util';
 import { Prisma } from '@prisma/client';
-import { paginate } from '../../../common/utils/primsa-util';
+import { createPrismaStream, paginate } from '../../../common/utils/primsa-util';
 
 export const createService = async (data: CreateServiceDto) => {
   const service = await prisma.service.create({
@@ -68,4 +68,9 @@ export const getAllServices = async (query: ListServicesQueryDto) => {
     where,
     Object.keys(include).length > 0 ? include : undefined,
   );
+};
+
+export const streamAllServicesService = (query: ListServicesQueryDto) => {
+  const where = buildServiceFilter(query);
+  return createPrismaStream(prisma.service, where, 3);
 };

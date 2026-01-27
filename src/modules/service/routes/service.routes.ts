@@ -4,6 +4,7 @@ import {
   updateService,
   getDeviceById,
   listServices,
+  streamService,
 } from '../controllers/service.controller';
 import {
   createServiceValidation,
@@ -26,6 +27,12 @@ router.get(
   '/',
   validationMiddleware({ query: queryServicesValidation }) as unknown as express.RequestHandler,
   listServices,
+);
+
+router.get(
+  '/stream',
+  validationMiddleware({ query: queryServicesValidation }) as unknown as express.RequestHandler,
+  streamService,
 );
 
 router.post(

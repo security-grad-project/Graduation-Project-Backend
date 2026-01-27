@@ -57,3 +57,20 @@ export const listServices = catchAsync(async (req: Request, res: Response) => {
     meta: result.meta,
   });
 });
+
+export const streamService = catchAsync(async (req: Request, res: Response) => {
+  res.setHeader('Content-Type', 'application/json');
+  const query = req.query as unknown as ListServicesQueryDto;
+  const dataStream = serviceService.streamAllServicesService(query);
+
+  req.on('close', () => {
+    dataStream.destroy();
+  });
+
+  dataStream.pipe(res);
+
+  dataStream.on('error', (err) => {
+    console.error('Stream error:', err);
+    res.end();
+  });
+});

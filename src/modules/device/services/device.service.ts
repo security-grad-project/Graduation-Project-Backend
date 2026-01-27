@@ -78,6 +78,5 @@ export const streamAllDevicesService = (query: {
   hostName?: string;
 }) => {
   const where = buildDeviceFilter(query as any);
-  // @ts-ignore
   return createPrismaStream(prisma.device, where, 3);
 };
