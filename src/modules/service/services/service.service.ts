@@ -74,3 +74,8 @@ export const streamAllServicesService = (query: ListServicesQueryDto) => {
   const where = buildServiceFilter(query);
   return createPrismaStream(prisma.service, where, 3);
 };
+
+export const deleteServiceService = async (id: string) => {
+  await prisma.service.delete({ where: { id } });
+  logger.info(`Device deleted successfully: ID ${id}`);
+};

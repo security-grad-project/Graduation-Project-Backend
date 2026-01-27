@@ -74,3 +74,9 @@ export const streamService = catchAsync(async (req: Request, res: Response) => {
     res.end();
   });
 });
+
+export const deleteService = catchAsync(async (req: Request, res: Response) => {
+  const serviceId = req.params.id as string;
+  await serviceService.deleteServiceService(serviceId);
+  res.status(STATUS_CODE.NO_CONTENT).send();
+});

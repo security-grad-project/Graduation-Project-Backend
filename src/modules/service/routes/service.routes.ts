@@ -5,9 +5,11 @@ import {
   getDeviceById,
   listServices,
   streamService,
+  deleteService,
 } from '../controllers/service.controller';
 import {
   createServiceValidation,
+  deleteServiceValidation,
   queryServicesValidation,
   updateServiceValidation,
 } from '../validations/service.validation';
@@ -53,4 +55,7 @@ router.patch(
 );
 
 router.get('/:id', getDeviceById);
+
+router.delete('/:id', validationMiddleware({ params: deleteServiceValidation }), deleteService);
+
 export default router;
