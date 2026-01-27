@@ -1,7 +1,13 @@
 import express from 'express';
-import { createService, updateService, getDeviceById } from '../controllers/service.controller';
+import {
+  createService,
+  updateService,
+  getDeviceById,
+  listServices,
+} from '../controllers/service.controller';
 import {
   createServiceValidation,
+  queryServicesValidation,
   updateServiceValidation,
 } from '../validations/service.validation';
 import validationMiddleware from '../../../common/middlewares/validation.middleware';
@@ -15,6 +21,12 @@ import { authenticate, authorize } from '../../../common/middlewares';
 const router = express.Router();
 
 router.use(authenticate);
+
+router.get(
+  '/',
+  validationMiddleware({ query: queryServicesValidation }) as unknown as express.RequestHandler,
+  listServices,
+);
 
 router.post(
   '/',

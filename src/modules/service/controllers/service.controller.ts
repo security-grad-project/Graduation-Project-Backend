@@ -6,6 +6,7 @@ import { STATUS } from '../../../common/constants/responseStatus';
 import logger from '../../../common/utils/logger';
 import { CreateServiceDto } from '../dto/create-service.dto';
 import { updateServiceDto } from '../dto/update-service.dto';
+import { ListServicesQueryDto } from '../dto/list-service-query.dto';
 
 export const createService = catchAsync(async (req: Request, res: Response) => {
   const data: CreateServiceDto = req.body as CreateServiceDto;
@@ -43,5 +44,16 @@ export const getDeviceById = catchAsync(async (req: Request, res: Response) => {
   res.status(STATUS_CODE.SUCCESS).json({
     status: STATUS.SUCCESS,
     service: service,
+  });
+});
+
+export const listServices = catchAsync(async (req: Request, res: Response) => {
+  const query: ListServicesQueryDto = req.query as unknown as ListServicesQueryDto;
+
+  const result = await serviceService.getAllServices(query);
+  res.status(STATUS_CODE.SUCCESS).json({
+    status: STATUS.SUCCESS,
+    data: result.data,
+    meta: result.meta,
   });
 });
