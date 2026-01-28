@@ -50,11 +50,11 @@ export const getDeviceById = catchAsync(async (req: Request, res: Response) => {
 export const listServices = catchAsync(async (req: Request, res: Response) => {
   const query: ListServicesQueryDto = req.query as unknown as ListServicesQueryDto;
 
-  const result = await serviceService.getAllServices(query);
+  const services = await serviceService.getAllServices(query);
   res.status(STATUS_CODE.SUCCESS).json({
     status: STATUS.SUCCESS,
-    data: result.data,
-    meta: result.meta,
+    data: services.data,
+    meta: services.meta,
   });
 });
 
@@ -89,5 +89,20 @@ export const countServices = catchAsync(async (req: Request, res: Response) => {
   res.status(STATUS_CODE.SUCCESS).json({
     status: STATUS.SUCCESS,
     data: { count },
+  });
+});
+
+export const getServiceByUser = catchAsync(async (req: Request, res: Response) => {
+  const { userId } = req.params;
+  const query = {
+    ...req.query,
+    userId,
+  } as unknown as ListServicesQueryDto;
+
+  const services = await serviceService.getAllServices(query);
+  res.status(STATUS_CODE.SUCCESS).json({
+    status: STATUS.SUCCESS,
+    data: services.data,
+    meta: services.meta,
   });
 });

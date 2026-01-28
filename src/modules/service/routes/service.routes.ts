@@ -7,12 +7,14 @@ import {
   streamService,
   deleteService,
   countServices,
+  getServiceByUser,
 } from '../controllers/service.controller';
 import {
   createServiceValidation,
   deleteServiceValidation,
   queryServicesValidation,
   updateServiceValidation,
+  getServiceByUserValidation,
 } from '../validations/service.validation';
 import validationMiddleware from '../../../common/middlewares/validation.middleware';
 import {
@@ -43,6 +45,12 @@ router.get(
   '/count',
   validationMiddleware({ query: queryServicesValidation }) as unknown as express.RequestHandler,
   countServices,
+);
+
+router.get(
+  '/:userId',
+  validationMiddleware({ params: getServiceByUserValidation }) as unknown as express.RequestHandler,
+  getServiceByUser,
 );
 
 router.post(
