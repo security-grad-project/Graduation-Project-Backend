@@ -25,6 +25,7 @@ import {
   checkUserExists,
 } from './../../../common/middlewares/checkExistence.middleware';
 import { checkServiceExists } from '../middlewares/service.middleware';
+import { Role } from '@prisma/client';
 
 import { authenticate, authorize } from '../../../common/middlewares';
 
@@ -74,6 +75,10 @@ router.post(
   createService,
 );
 
+router.get('/:id', validationMiddleware({ params: serviceIdValidation }), getServiceById);
+
+router.use(authorize(Role.SOC_ADMIN));
+
 router.patch(
   '/:id',
   validationMiddleware({ body: updateServiceValidation, params: serviceIdValidation }),
@@ -91,8 +96,6 @@ router.put(
   checkDeviceExists,
   updateService,
 );
-
-router.get('/:id', validationMiddleware({ params: serviceIdValidation }), getServiceById);
 
 router.delete('/:id', validationMiddleware({ params: serviceIdValidation }), deleteService);
 
