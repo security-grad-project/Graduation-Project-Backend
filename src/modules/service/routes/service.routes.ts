@@ -6,6 +6,7 @@ import {
   listServices,
   streamService,
   deleteService,
+  countServices,
 } from '../controllers/service.controller';
 import {
   createServiceValidation,
@@ -21,6 +22,7 @@ import {
 import { checkServiceExists } from '../middlewares/service.middleware';
 
 import { authenticate, authorize } from '../../../common/middlewares';
+
 const router = express.Router();
 
 router.use(authenticate);
@@ -35,6 +37,12 @@ router.get(
   '/stream',
   validationMiddleware({ query: queryServicesValidation }) as unknown as express.RequestHandler,
   streamService,
+);
+
+router.get(
+  '/count',
+  validationMiddleware({ query: queryServicesValidation }) as unknown as express.RequestHandler,
+  countServices,
 );
 
 router.post(

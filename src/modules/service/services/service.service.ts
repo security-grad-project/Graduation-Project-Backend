@@ -8,6 +8,7 @@ import { ListServicesQueryDto } from '../dto/list-service-query.dto';
 import { buildServiceFilter } from './service.util';
 import { Prisma } from '@prisma/client';
 import { createPrismaStream, paginate } from '../../../common/utils/primsa-util';
+import { query } from 'winston';
 
 export const createService = async (data: CreateServiceDto) => {
   const service = await prisma.service.create({
@@ -78,4 +79,10 @@ export const streamAllServicesService = (query: ListServicesQueryDto) => {
 export const deleteServiceService = async (id: string) => {
   await prisma.service.delete({ where: { id } });
   logger.info(`Device deleted successfully: ID ${id}`);
+};
+
+export const countServiceService = async (query: ListServicesQueryDto) => {
+  const where = buildServiceFilter(query);
+  const result = await prisma.service.count({ where });
+  return result;
 };

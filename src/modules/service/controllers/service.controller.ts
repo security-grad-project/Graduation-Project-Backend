@@ -80,3 +80,14 @@ export const deleteService = catchAsync(async (req: Request, res: Response) => {
   await serviceService.deleteServiceService(serviceId);
   res.status(STATUS_CODE.NO_CONTENT).send();
 });
+
+export const countServices = catchAsync(async (req: Request, res: Response) => {
+  const query: ListServicesQueryDto = req.query as unknown as ListServicesQueryDto;
+
+  const count = await serviceService.countServiceService(query);
+
+  res.status(STATUS_CODE.SUCCESS).json({
+    status: STATUS.SUCCESS,
+    data: { count },
+  });
+});
