@@ -110,13 +110,18 @@ model Service {
 
 model Rule {
   id          String   @id @default(uuid())
-  name        String
+  name        String   @unique
   description String
   type        String
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
   alerts Alert[]
+  
+  @@index([type])
+  @@index([createdAt])
+  @@index([name])
+  @@index([type, createdAt])
 }
 
 model Alert {
@@ -125,7 +130,7 @@ model Alert {
   description String
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
-  rule        Rule     @relation(fields: [ruleId], references: [id])
+  rule        Rule     @relation(fields: [ruleId], references: [id], onDelete: Cascade)
   ruleId      String
   device      Device   @relation(fields: [deviceId], references: [id])
   deviceId    String
