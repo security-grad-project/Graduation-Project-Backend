@@ -16,6 +16,9 @@ export const deleteServiceValidation = z.object({
 export const getServiceByUserValidation = z.object({
   userId: z.uuid(),
 });
+export const getServiceByDeviceValidation = z.object({
+  deviceId: z.uuid(),
+});
 
 export const queryServicesValidation = z.object({
   type: z.string().optional(),

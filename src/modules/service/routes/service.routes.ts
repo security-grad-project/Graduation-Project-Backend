@@ -8,6 +8,7 @@ import {
   deleteService,
   countServices,
   getServiceByUser,
+  getServiceByDevice,
 } from '../controllers/service.controller';
 import {
   createServiceValidation,
@@ -15,6 +16,7 @@ import {
   queryServicesValidation,
   updateServiceValidation,
   getServiceByUserValidation,
+  getServiceByDeviceValidation,
 } from '../validations/service.validation';
 import validationMiddleware from '../../../common/middlewares/validation.middleware';
 import {
@@ -48,9 +50,17 @@ router.get(
 );
 
 router.get(
-  '/:userId',
+  '/user/:userId',
   validationMiddleware({ params: getServiceByUserValidation }) as unknown as express.RequestHandler,
   getServiceByUser,
+);
+
+router.get(
+  '/device/:deviceId',
+  validationMiddleware({
+    params: getServiceByDeviceValidation,
+  }) as unknown as express.RequestHandler,
+  getServiceByDevice,
 );
 
 router.post(

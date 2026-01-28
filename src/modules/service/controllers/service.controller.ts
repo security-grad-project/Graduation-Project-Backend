@@ -106,3 +106,18 @@ export const getServiceByUser = catchAsync(async (req: Request, res: Response) =
     meta: services.meta,
   });
 });
+
+export const getServiceByDevice = catchAsync(async (req: Request, res: Response) => {
+  const { deviceId } = req.params;
+  const query = {
+    ...req.query,
+    deviceId,
+  } as unknown as ListServicesQueryDto;
+
+  const services = await serviceService.getAllServices(query);
+  res.status(STATUS_CODE.SUCCESS).json({
+    status: STATUS.SUCCESS,
+    data: services.data,
+    meta: services.meta,
+  });
+});
