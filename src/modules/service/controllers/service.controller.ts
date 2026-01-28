@@ -12,9 +12,9 @@ export const createService = catchAsync(async (req: Request, res: Response) => {
   const service = await serviceService.createService(data);
 
   res.status(STATUS_CODE.CREATED).json({
-    status: STATUS.SUCCESS,
-    message: 'Service created successfully',
+    succcess: 'true',
     data: service,
+    message: 'Service created successfully',
   });
 });
 
@@ -25,9 +25,9 @@ export const updateService = catchAsync(async (req: Request, res: Response) => {
   const service = await serviceService.updateService(id, data);
 
   res.status(STATUS_CODE.SUCCESS).json({
-    status: STATUS.SUCCESS,
-    message: 'Service updated successfully',
+    succcess: 'true',
     data: service,
+    message: 'Service updated successfully',
   });
 });
 
@@ -41,8 +41,8 @@ export const getServiceById = catchAsync(async (req: Request, res: Response) => 
   });
 
   res.status(STATUS_CODE.SUCCESS).json({
-    status: STATUS.SUCCESS,
-    service: service,
+    succcess: 'true',
+    data: service,
   });
 });
 
@@ -51,7 +51,7 @@ export const listServices = catchAsync(async (req: Request, res: Response) => {
 
   const services = await serviceService.getAllServices(query);
   res.status(STATUS_CODE.SUCCESS).json({
-    status: STATUS.SUCCESS,
+    succcess: 'true',
     data: services.data,
     meta: services.meta,
   });
@@ -86,7 +86,7 @@ export const countServices = catchAsync(async (req: Request, res: Response) => {
   const count = await serviceService.countServiceService(query);
 
   res.status(STATUS_CODE.SUCCESS).json({
-    status: STATUS.SUCCESS,
+    succcess: 'true',
     data: { count },
   });
 });
@@ -100,7 +100,7 @@ export const getServiceByUser = catchAsync(async (req: Request, res: Response) =
 
   const services = await serviceService.getAllServices(query);
   res.status(STATUS_CODE.SUCCESS).json({
-    status: STATUS.SUCCESS,
+    succcess: 'true',
     data: services.data,
     meta: services.meta,
   });
@@ -115,7 +115,7 @@ export const getServiceByDevice = catchAsync(async (req: Request, res: Response)
 
   const services = await serviceService.getAllServices(query);
   res.status(STATUS_CODE.SUCCESS).json({
-    status: STATUS.SUCCESS,
+    succcess: 'true',
     data: services.data,
     meta: services.meta,
   });
