@@ -32,7 +32,7 @@ export const updateService = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-export const getDeviceById = catchAsync(async (req: Request, res: Response) => {
+export const getServiceById = catchAsync(async (req: Request, res: Response) => {
   const serviceId = req.params.id;
   const { includeDeviceData, includeUserData } = req.query;
   // @ts-ignore

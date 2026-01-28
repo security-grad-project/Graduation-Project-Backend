@@ -7,12 +7,8 @@ export const createServiceValidation = z.object({
 });
 
 export const updateServiceValidation = createServiceValidation.partial();
-export const getServiceValidation = z.object({
-  id: z.uuid(),
-});
-export const deleteServiceValidation = z.object({
-  id: z.uuid(),
-});
+
+export const serviceIdValidation = z.object({ id: z.uuid() });
 export const getServiceByUserValidation = z.object({
   userId: z.uuid(),
 });

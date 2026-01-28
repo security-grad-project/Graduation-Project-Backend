@@ -5,7 +5,7 @@ import { STATUS_CODE } from '../constants/responseCode';
 
 export const checkUserExists = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { userId } = req.body;
+    const userId = req.body?.userId || req.params.userId;
 
     if (!userId) return next();
 
@@ -21,7 +21,7 @@ export const checkUserExists = async (req: Request, res: Response, next: NextFun
 
 export const checkDeviceExists = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { deviceId } = req.body;
+    const deviceId = req.body?.deviceId || req.params.deviceId;
 
     if (!deviceId) return next();
 

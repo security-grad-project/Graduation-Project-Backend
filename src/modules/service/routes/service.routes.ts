@@ -2,7 +2,7 @@ import express from 'express';
 import {
   createService,
   updateService,
-  getDeviceById,
+  getServiceById,
   listServices,
   streamService,
   deleteService,
@@ -12,11 +12,11 @@ import {
 } from '../controllers/service.controller';
 import {
   createServiceValidation,
-  deleteServiceValidation,
   queryServicesValidation,
   updateServiceValidation,
   getServiceByUserValidation,
   getServiceByDeviceValidation,
+  serviceIdValidation,
 } from '../validations/service.validation';
 import validationMiddleware from '../../../common/middlewares/validation.middleware';
 import {
@@ -52,6 +52,7 @@ router.get(
 router.get(
   '/user/:userId',
   validationMiddleware({ params: getServiceByUserValidation }) as unknown as express.RequestHandler,
+  checkUserExists,
   getServiceByUser,
 );
 
@@ -60,6 +61,7 @@ router.get(
   validationMiddleware({
     params: getServiceByDeviceValidation,
   }) as unknown as express.RequestHandler,
+  checkDeviceExists,
   getServiceByDevice,
 );
 
@@ -73,15 +75,15 @@ router.post(
 
 router.patch(
   '/:id',
-  validationMiddleware({ body: updateServiceValidation }),
+  validationMiddleware({ body: updateServiceValidation, params: serviceIdValidation }),
   checkServiceExists,
   checkUserExists,
   checkDeviceExists,
   updateService,
 );
 
-router.get('/:id', getDeviceById);
+router.get('/:id', validationMiddleware({ params: serviceIdValidation }), getServiceById);
 
-router.delete('/:id', validationMiddleware({ params: deleteServiceValidation }), deleteService);
+router.delete('/:id', validationMiddleware({ params: serviceIdValidation }), deleteService);
 
 export default router;
