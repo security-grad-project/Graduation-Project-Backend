@@ -14,6 +14,7 @@ import {
   createServiceValidation,
   queryServicesValidation,
   updateServiceValidation,
+  updateServiceStrictValidation,
   getServiceByUserValidation,
   getServiceByDeviceValidation,
   serviceIdValidation,
@@ -76,6 +77,15 @@ router.post(
 router.patch(
   '/:id',
   validationMiddleware({ body: updateServiceValidation, params: serviceIdValidation }),
+  checkServiceExists,
+  checkUserExists,
+  checkDeviceExists,
+  updateService,
+);
+
+router.put(
+  '/:id',
+  validationMiddleware({ body: updateServiceStrictValidation, params: serviceIdValidation }),
   checkServiceExists,
   checkUserExists,
   checkDeviceExists,
