@@ -77,6 +77,8 @@ const swaggerDefinition: SwaggerDefinition = {
     {
       name: 'Rules',
       description: 'Rules management endpoints',
+      name: 'Services',
+      description: 'Service management endpoints',
     },
   ],
 };
