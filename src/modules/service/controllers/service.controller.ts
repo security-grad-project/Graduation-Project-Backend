@@ -20,8 +20,7 @@ export const createService = catchAsync(async (req: Request, res: Response) => {
 
 export const updateService = catchAsync(async (req: Request, res: Response) => {
   const data: updateServiceDto = req.body as updateServiceDto;
-  const id = req.params.id;
-  // @ts-ignore
+  const id = req.params.id as string;
   const service = await serviceService.updateService(id, data);
 
   res.status(STATUS_CODE.SUCCESS).json({
@@ -32,9 +31,8 @@ export const updateService = catchAsync(async (req: Request, res: Response) => {
 });
 
 export const getServiceById = catchAsync(async (req: Request, res: Response) => {
-  const serviceId = req.params.id;
+  const serviceId = req.params.id as string;
   const { includeDeviceData, includeUserData } = req.query;
-  // @ts-ignore
   const service = await serviceService.getServiceByIdService(serviceId, {
     includeDeviceData: includeDeviceData === 'true',
     includeUserData: includeUserData === 'true',

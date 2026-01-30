@@ -5,8 +5,7 @@ import { STATUS_CODE } from '../../../common/constants/responseCode';
 
 export const checkServiceExists = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { id } = req.params;
-    // @ts-ignore
+    const id = req.params.id as string;
     const service = await prisma.service.findUnique({ where: { id } });
 
     if (!service) {

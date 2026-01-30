@@ -8,7 +8,7 @@ import { ListServicesQueryDto } from '../dto/list-service-query.dto';
 import { buildServiceFilter } from './service.util';
 import { Prisma } from '@prisma/client';
 import { createPrismaStream, paginate } from '../../../common/utils/primsa-util';
-import { query } from 'winston';
+import { updateServiceDto } from '../dto/update-service.dto';
 
 export const createService = async (data: CreateServiceDto) => {
   const service = await prisma.service.create({
@@ -23,7 +23,7 @@ export const createService = async (data: CreateServiceDto) => {
   return service;
 };
 
-export const updateService = async (id: string, data: CreateServiceDto) => {
+export const updateService = async (id: string, data: updateServiceDto) => {
   const service = await prisma.service.update({
     data: {
       ...data,
@@ -58,7 +58,6 @@ export const getAllServices = async (query: ListServicesQueryDto) => {
   if (query.includeUserData) include.user = true;
 
   return await paginate(
-    // @ts-ignore
     prisma.service,
     {
       page: query.page,

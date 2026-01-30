@@ -60,7 +60,6 @@ export const listDevicesService = async (query: ListDevicesQueryDto) => {
   } as any);
 
   return await paginate(
-    // @ts-ignore
     prisma.device,
     {
       page: query.page,
