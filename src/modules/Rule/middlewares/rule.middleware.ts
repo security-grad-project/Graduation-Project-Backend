@@ -21,7 +21,7 @@ export const isRuleNameUniqueMiddleware = catchAsync(
 
 export const isRuleExistMiddleware = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
-    const id = req.params.id;
+    const id = req.params.id as string;
 
     const ruleExist = await prisma.rule.findUnique({
       where: { id: id },

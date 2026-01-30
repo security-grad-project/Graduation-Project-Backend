@@ -20,7 +20,7 @@ export const createDevice = catchAsync(async (req: Request, res: Response) => {
 });
 
 export const getDeviceById = catchAsync(async (req: Request, res: Response) => {
-  const deviceId = req.params.id;
+  const deviceId = req.params.id as string;
   const { includeServices, includeAlerts } = req.query;
   const device = await deviceService.getDeviceByIdService(deviceId, {
     includeServices: includeServices === 'true',
@@ -34,7 +34,7 @@ export const getDeviceById = catchAsync(async (req: Request, res: Response) => {
 });
 
 export const updateDevice = catchAsync(async (req: Request, res: Response) => {
-  const deviceId = req.params.id;
+  const deviceId = req.params.id as string;
   const data: UpdateDeviceDto = req.body as UpdateDeviceDto;
   const device = await deviceService.updateDeviceService(deviceId, data);
 
@@ -48,7 +48,7 @@ export const updateDevice = catchAsync(async (req: Request, res: Response) => {
 });
 
 export const deleteDevice = catchAsync(async (req: Request, res: Response) => {
-  const deviceId = req.params.id;
+  const deviceId = req.params.id as string;
   await deviceService.deleteDeviceService(deviceId);
   res.status(STATUS_CODE.NO_CONTENT).send();
 });

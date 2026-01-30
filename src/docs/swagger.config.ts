@@ -74,6 +74,10 @@ const swaggerDefinition: SwaggerDefinition = {
       name: 'Devices',
       description: 'Device management endpoints',
     },
+    {
+      name: 'Rules',
+      description: 'Rules management endpoints',
+    },
   ],
 };
 

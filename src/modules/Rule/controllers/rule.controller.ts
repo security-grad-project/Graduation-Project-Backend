@@ -36,7 +36,7 @@ export const createRule = catchAsync(async (req: Request, res: Response) => {
 });
 
 export const updateRule = catchAsync(async (req: Request, res: Response) => {
-  const id = req.params.id;
+  const id = req.params.id as string;
   const data: updateRuleData = req.body as updateRuleData;
   const rule = await updateRuleService(id, data);
 
@@ -48,13 +48,13 @@ export const updateRule = catchAsync(async (req: Request, res: Response) => {
 });
 
 export const deleteRule = catchAsync(async (req: Request, res: Response) => {
-  const id = req.params.id;
+  const id = req.params.id as string;
   await deleteRuleService(id);
   res.status(STATUS_CODE.NO_CONTENT).send();
 });
 
 export const getRuleById = catchAsync(async (req: Request, res: Response) => {
-  const id = req.params.id;
+  const id = req.params.id as string ;
   const rule = await getRuleService(id);
 
   res.status(STATUS_CODE.SUCCESS).json({
@@ -76,7 +76,7 @@ export const getAllRules = catchAsync(async (req: Request, res: Response) => {
 });
 
 export const getRulesByType = catchAsync(async (req: Request, res: Response) => {
-  const type = req.params.type;
+  const type = req.params.type as string;
   const query: RulesByType = req.query as unknown as RulesByType;
   const rules = await getRulesByTypesService(type, query);
 
@@ -88,7 +88,7 @@ export const getRulesByType = catchAsync(async (req: Request, res: Response) => 
 });
 
 export const getRuleWithAllAlerts = catchAsync(async (req: Request, res: Response) => {
-  const id = req.params.id;
+  const id = req.params.id as string;
   const rule = await getRuleWithAlertsService(id);
 
   res.status(STATUS_CODE.SUCCESS).json({
@@ -99,7 +99,7 @@ export const getRuleWithAllAlerts = catchAsync(async (req: Request, res: Respons
 });
 
 export const updateFullRule = catchAsync(async (req: Request, res: Response) => {
-  const id = req.params.id;
+  const id = req.params.id as string;
   const data: createRuleData = req.body as createRuleData;
   const rule = await updateFullRuleService(id, data);
 
@@ -122,8 +122,8 @@ export const getStats = catchAsync(async (req: Request, res: Response) => {
 });
 
 export const duplicateRule = catchAsync(async (req: Request, res: Response) => {
-  const id = req.params.id;
-  const name = req.body.name;
+  const id = req.params.id as string;
+  const name = req.body.name as string;
   const rule = await duplicateRuleService(id, name);
 
   res.status(STATUS_CODE.CREATED).json({
