@@ -54,7 +54,7 @@ export const deleteRule = catchAsync(async (req: Request, res: Response) => {
 });
 
 export const getRuleById = catchAsync(async (req: Request, res: Response) => {
-  const id = req.params.id as string ;
+  const id = req.params.id as string;
   const rule = await getRuleService(id);
 
   res.status(STATUS_CODE.SUCCESS).json({
