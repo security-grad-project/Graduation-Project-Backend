@@ -393,8 +393,6 @@ router.use(authorize(Role.SOC_ADMIN));
  *             required:
  *               - ip
  *               - hostName
- *               - port
- *               - userId
  *             properties:
  *               ip:
  *                 type: string
