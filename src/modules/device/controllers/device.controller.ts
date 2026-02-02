@@ -67,10 +67,8 @@ export const streamDevices = catchAsync(async (req: Request, res: Response) => {
   res.setHeader('Content-Type', 'application/json');
 
   const query = {
-    userId: (req.query.userId as string) || undefined,
     ip: (req.query.ip as string) || undefined,
     hostName: (req.query.hostName as string) || undefined,
-    port: (req.query.port as string) || undefined,
     createdAt: (req.query.createdAt as string) || undefined,
   };
 

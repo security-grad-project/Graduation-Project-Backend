@@ -40,11 +40,7 @@ router.use(authenticate);
  *         schema:
  *           type: string
  *         description: Filter by hostname
- *       - in: query
- *         name: userId
- *         schema:
- *           type: string
- *         description: Filter by user ID
+
  *       - in: query
  *         name: page
  *         schema:
@@ -91,10 +87,7 @@ router.use(authenticate);
  *                         type: string
  *                       hostName:
  *                         type: string
- *                       port:
- *                         type: integer
- *                       userId:
- *                         type: string
+
  *                       createdAt:
  *                         type: string
  *                         format: date-time
@@ -134,11 +127,6 @@ router.get(
  *       - bearerAuth: []
  *     parameters:
  *       - in: query
- *         name: userId
- *         schema:
- *           type: string
- *         description: Filter by user ID
- *       - in: query
  *         name: ip
  *         schema:
  *           type: string
@@ -148,11 +136,6 @@ router.get(
  *         schema:
  *           type: string
  *         description: Filter by hostname
- *       - in: query
- *         name: port
- *         schema:
- *           type: string
- *         description: Filter by port
  *       - in: query
  *         name: createdAt
  *         schema:
@@ -223,10 +206,7 @@ router.get('/stream', streamDevices);
  *                       type: string
  *                     hostName:
  *                       type: string
- *                     port:
- *                       type: integer
- *                     userId:
- *                       type: string
+
  *                     createdAt:
  *                       type: string
  *                       format: date-time
@@ -393,8 +373,6 @@ router.use(authorize(Role.SOC_ADMIN));
  *             required:
  *               - ip
  *               - hostName
- *               - port
- *               - userId
  *             properties:
  *               ip:
  *                 type: string
@@ -402,12 +380,7 @@ router.use(authorize(Role.SOC_ADMIN));
  *               hostName:
  *                 type: string
  *                 example: server-01
- *               port:
- *                 type: integer
- *                 example: 8080
- *               userId:
- *                 type: string
- *                 example: user-uuid-here
+
  *     responses:
  *       201:
  *         description: Device created successfully
@@ -431,10 +404,7 @@ router.use(authorize(Role.SOC_ADMIN));
  *                       type: string
  *                     hostName:
  *                       type: string
- *                     port:
- *                       type: integer
- *                     userId:
- *                       type: string
+
  *                     createdAt:
  *                       type: string
  *                       format: date-time
@@ -491,12 +461,7 @@ router.post('/', validationMiddleware({ body: createDeviceRequestValidation }), 
  *               hostName:
  *                 type: string
  *                 example: server-01-updated
- *               port:
- *                 type: integer
- *                 example: 8080
- *               userId:
- *                 type: string
- *                 example: user-uuid-here
+
  *     responses:
  *       200:
  *         description: Device updated successfully
@@ -520,10 +485,7 @@ router.post('/', validationMiddleware({ body: createDeviceRequestValidation }), 
  *                       type: string
  *                     hostName:
  *                       type: string
- *                     port:
- *                       type: integer
- *                     userId:
- *                       type: string
+
  *                     createdAt:
  *                       type: string
  *                       format: date-time

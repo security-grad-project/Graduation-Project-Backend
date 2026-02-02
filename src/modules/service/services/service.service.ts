@@ -16,6 +16,7 @@ export const createService = async (data: CreateServiceDto) => {
       type: data.type,
       userId: data.userId,
       deviceId: data.deviceId,
+      port: data.port,
     },
   });
 

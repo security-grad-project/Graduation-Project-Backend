@@ -2,6 +2,7 @@ export interface ListServicesQueryDto {
   type?: string;
   userId?: string;
   deviceId?: string;
+  port?: string;
   page?: number;
   limit?: number;
   sortBy?: string;

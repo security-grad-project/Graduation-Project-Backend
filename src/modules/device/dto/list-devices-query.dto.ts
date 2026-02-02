@@ -1,9 +1,11 @@
 export interface ListDevicesQueryDto {
   ip?: string;
   hostName?: string;
-  userId?: string;
+  createdAt?: string;
   page?: number;
   limit?: number;
   sortBy?: string;
   sortOrder?: 'asc' | 'desc';
+  includeServices: boolean;
+  includeAlerts: boolean;
 }
