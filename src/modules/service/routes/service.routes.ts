@@ -473,6 +473,10 @@ router.get(
  *                 type: string
  *                 format: uuid
  *                 description: ID of the associated device
+ *               port:
+ *                 type: integer
+ *                 description: Service port number
+ *                 example: 8080
  *     responses:
  *       201:
  *         description: Service created successfully
@@ -631,6 +635,8 @@ router.use(authorize(Role.SOC_ADMIN));
  *               deviceId:
  *                 type: string
  *                 format: uuid
+ *               port:
+ *                 type: integer
  *     responses:
  *       200:
  *         description: Service updated successfully
@@ -708,6 +714,7 @@ router.patch(
  *               - type
  *               - userId
  *               - deviceId
+ *               - port
  *             properties:
  *               type:
  *                 type: string
@@ -717,6 +724,8 @@ router.patch(
  *               deviceId:
  *                 type: string
  *                 format: uuid
+ *               port:
+ *                 type: integer
  *     responses:
  *       200:
  *         description: Service updated successfully
