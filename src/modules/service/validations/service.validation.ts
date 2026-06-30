@@ -27,7 +27,12 @@ export const queryServicesValidation = z.object({
   type: emptyToUndefined,
   userId: z.uuid().optional(),
   deviceId: z.uuid().optional(),
-  port: z.coerce.number().int().min(1).max(65535).optional(),
+  port: z
+    .string()
+    .regex(/^\d{1,5}(-\d{1,5})?$/, {
+      message: 'Port must be a single port or a range like 80-90',
+    })
+    .optional(),
   page: z.coerce.number().int().min(1).default(1).optional(),
   limit: z.coerce.number().int().min(1).max(100).default(10).optional(),
   sortBy: emptyToUndefined,

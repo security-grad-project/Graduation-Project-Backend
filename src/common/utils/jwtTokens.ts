@@ -30,7 +30,7 @@ export const generateRefreshToken = (id: string, additionalPayload: object = {})
 export const verifyRefreshToken = (token: string): Promise<ITokenPayload> => {
   return new Promise((resolve, reject) => {
     jwt.verify(token, config.JWT_REFRESH_KEY, (err, decoded) => {
-      if (err) reject(err);
+      if (err) return reject(err);
       resolve(decoded as ITokenPayload);
     });
   });

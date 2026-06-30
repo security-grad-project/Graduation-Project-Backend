@@ -12,12 +12,13 @@ export const buildServiceFilter = (query: ListServicesQueryDto): Prisma.ServiceW
 
   if (query.deviceId) where.deviceId = query.deviceId;
 
-  if (query.port) {
-    if (query.port.includes('-')) {
-      const [min, max] = query.port.split('-').map(Number);
+  if (query.port !== undefined && query.port !== null && query.port !== '') {
+    const portStr = String(query.port);
+    if (portStr.includes('-')) {
+      const [min, max] = portStr.split('-').map(Number);
       where.port = { gte: min, lte: max };
     } else {
-      where.port = Number(query.port);
+      where.port = Number(portStr);
     }
   }
 
