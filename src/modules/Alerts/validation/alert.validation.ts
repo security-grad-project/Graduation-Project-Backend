@@ -24,3 +24,7 @@ export const queryAlertsValidation = z.object({
 export const getAlertValidation = z.object({
   id: z.uuid(),
 });
+
+export const updateAlertStatusValidation = z.object({
+  status: z.enum(statusValues),
+});

@@ -10,3 +10,7 @@ export interface ListAlertsQuery {
   status?: Status;
   deviceId?: string;
 }
+
+export interface updateAlertStatusData {
+  status: Status;
+}

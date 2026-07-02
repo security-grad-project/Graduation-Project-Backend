@@ -1,7 +1,7 @@
 import logger from '../../../common/utils/logger';
 import { prisma } from '../../../config/postgres';
 import { Prisma } from '@prisma/client';
-import { ListAlertsQuery } from '../types/types';
+import { ListAlertsQuery, updateAlertStatusData } from '../types/types';
 import { buildAlertFilter } from './alert.utils';
 import ApiErrorHandler from '../../../common/utils/ApiErrorHandler';
 
@@ -64,5 +64,16 @@ export const getAlertService = async (id: string) => {
   }
 
   logger.info(`Alert retrieved successfully: id ${id}`);
+  return alert;
+};
+
+export const updateAlertStatusService = async (id: string, data: updateAlertStatusData) => {
+  const alert = await prisma.alert.update({
+    where: { id },
+    data,
+    include: { device: true, rule: true },
+  });
+
+  logger.info(`alert status updated: id ${id} -> ${data.status}`);
   return alert;
 };
