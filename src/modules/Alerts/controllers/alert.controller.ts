@@ -1,8 +1,7 @@
 import { Request, Response } from 'express';
 import catchAsync from '../../../common/utils/catchAsync';
-import { prisma } from '../../../config/postgres';
 import { ListAlertsQuery } from '../types/types';
-import { getAllAlertsService } from '../services/alert.service';
+import { getAllAlertsService, getAlertService } from '../services/alert.service';
 import { STATUS, STATUS_CODE } from '../../../common/constants/constants';
 
 export const getAllAlerts = catchAsync(async (req: Request, res: Response) => {
@@ -13,12 +12,13 @@ export const getAllAlerts = catchAsync(async (req: Request, res: Response) => {
     .json({ status: STATUS.SUCCESS, data: alerts.data, meta: alerts.meta });
 });
 
-export const createAlert = catchAsync(async (req: Request, res: Response) => {
-  const data = req.body;
-  const alert = await prisma.alert.create({ data });
-  res.status(STATUS_CODE.CREATED).json({
+export const getAlertById = catchAsync(async (req: Request, res: Response) => {
+  const id = req.params.id as string;
+  const alert = await getAlertService(id);
+
+  res.status(STATUS_CODE.SUCCESS).json({
     status: STATUS.SUCCESS,
     data: alert,
-    message: 'Alert created successfully',
+    message: 'Alert retrieved successfully',
   });
 });

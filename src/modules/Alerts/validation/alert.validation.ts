@@ -20,3 +20,7 @@ export const queryAlertsValidation = z.object({
   sortBy: z.enum(['severity', 'createdAt', 'updatedAt', 'name']).optional(),
   sortOrder: z.enum(['asc', 'desc']).optional(),
 });
+
+export const getAlertValidation = z.object({
+  id: z.uuid(),
+});

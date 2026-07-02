@@ -3,6 +3,7 @@ import { prisma } from '../../../config/postgres';
 import { Prisma } from '@prisma/client';
 import { ListAlertsQuery } from '../types/types';
 import { buildAlertFilter } from './alert.utils';
+import ApiErrorHandler from '../../../common/utils/ApiErrorHandler';
 
 const DEFAULT_ALERT_ORDER_BY: Prisma.AlertOrderByWithRelationInput[] = [
   { severity: 'desc' },
@@ -50,4 +51,18 @@ export const getAllAlertsService = async (query: ListAlertsQuery) => {
       hasPreviousPage: page > 1,
     },
   };
+};
+
+export const getAlertService = async (id: string) => {
+  const alert = await prisma.alert.findUnique({
+    where: { id },
+    include: { device: true, rule: true },
+  });
+
+  if (!alert) {
+    throw new ApiErrorHandler(404, 'Alert not found');
+  }
+
+  logger.info(`Alert retrieved successfully: id ${id}`);
+  return alert;
 };
