@@ -1,7 +1,7 @@
 import logger from '../../../common/utils/logger';
 import { prisma } from '../../../config/postgres';
 import { Prisma } from '@prisma/client';
-import { ListAlertsQuery, updateAlertStatusData } from '../types/types';
+import { AlertStatsQuery, ListAlertsQuery, updateAlertStatusData } from '../types/types';
 import { buildAlertFilter } from './alert.utils';
 import ApiErrorHandler from '../../../common/utils/ApiErrorHandler';
 
@@ -76,4 +76,22 @@ export const updateAlertStatusService = async (id: string, data: updateAlertStat
 
   logger.info(`alert status updated: id ${id} -> ${data.status}`);
   return alert;
+};
+
+export const getAlertStatsService = async (query: AlertStatsQuery) => {
+  const where = buildAlertFilter({
+    severity: query.severity,
+    status: query.status,
+    search: query.search,
+  });
+
+  const [total, bySeverity] = await Promise.all([
+    prisma.alert.count({ where }),
+    prisma.alert.groupBy({ by: ['severity'], where, _count: { _all: true } }),
+  ]);
+
+  const severityCounts: Record<string, number> = { LOW: 0, MEDIUM: 0, HIGH: 0, CRITICAL: 0 };
+  for (const row of bySeverity) severityCounts[row.severity] = row._count._all;
+
+  return { total, bySeverity: severityCounts };
 };

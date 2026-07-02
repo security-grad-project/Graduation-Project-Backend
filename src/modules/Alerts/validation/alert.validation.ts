@@ -28,3 +28,9 @@ export const getAlertValidation = z.object({
 export const updateAlertStatusValidation = z.object({
   status: z.enum(statusValues),
 });
+
+export const alertStatsQueryValidation = z.object({
+  severity: z.enum(severityValues).optional(),
+  status: z.enum(statusValues).optional(),
+  search: z.string().min(1).optional(),
+});

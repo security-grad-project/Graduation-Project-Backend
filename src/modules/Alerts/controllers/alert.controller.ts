@@ -1,10 +1,12 @@
 import { Request, Response } from 'express';
 import catchAsync from '../../../common/utils/catchAsync';
-import { ListAlertsQuery, updateAlertStatusData } from '../types/types';
+import { prisma } from '../../../config/postgres';
+import { ListAlertsQuery, updateAlertStatusData, AlertStatsQuery } from '../types/types';
 import {
   getAllAlertsService,
   getAlertService,
   updateAlertStatusService,
+  getAlertStatsService,
 } from '../services/alert.service';
 import { STATUS, STATUS_CODE } from '../../../common/constants/constants';
 
@@ -35,4 +37,13 @@ export const updateAlertStatus = catchAsync(async (req: Request, res: Response) 
   res
     .status(STATUS_CODE.SUCCESS)
     .json({ status: STATUS.SUCCESS, data: alert, message: 'Alert status updated successfully' });
+});
+
+export const getAlertStats = catchAsync(async (req: Request, res: Response) => {
+  const query: AlertStatsQuery = req.query as unknown as AlertStatsQuery;
+  const stats = await getAlertStatsService(query);
+
+  res
+    .status(STATUS_CODE.SUCCESS)
+    .json({ status: STATUS.SUCCESS, data: stats, message: 'Alert stats retrieved successfully' });
 });

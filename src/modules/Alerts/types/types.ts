@@ -14,3 +14,9 @@ export interface ListAlertsQuery {
 export interface updateAlertStatusData {
   status: Status;
 }
+
+export interface AlertStatsQuery {
+  severity?: Severity;
+  status?: Status;
+  search?: string;
+}
