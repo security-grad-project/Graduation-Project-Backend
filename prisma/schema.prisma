@@ -128,9 +128,12 @@ model Alert {
   updatedAt   DateTime @updatedAt
   rule        Rule     @relation(fields: [ruleId], references: [id], onDelete: Cascade)
   ruleId      String
-  device      Device   @relation(fields: [deviceId], references: [id])
-  deviceId    String
+  device      Device?   @relation(fields: [deviceId], references: [id])
+  deviceId    String?
   confidence  Float
   severity    Severity
   status      Status
+  scope       String?
+  source      String?
+  mitre       String[] 
 }
