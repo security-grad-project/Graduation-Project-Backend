@@ -1,6 +1,5 @@
 import { Request, Response } from 'express';
 import catchAsync from '../../../common/utils/catchAsync';
-import { prisma } from '../../../config/postgres';
 import { ListAlertsQuery, updateAlertStatusData, AlertStatsQuery } from '../types/types';
 import {
   getAllAlertsService,
