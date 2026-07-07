@@ -56,7 +56,13 @@
     "lint": "eslint . --ext .ts",
     "lint:fix": "eslint . --ext .ts --fix",
     "format": "prettier --write .",
-    "start:dev": "nodemon"
+    "build": "npx prisma generate && tsc",
+    "start": "node dist/server.js",
+    "start:dev": "nodemon",
+    "docker:build": "docker build --target production -t graduation-project-backend:latest .",
+    "docker:up": "docker compose up --build",
+    "docker:up:detached": "docker compose up --build -d",
+    "docker:dev": "docker compose -f docker-compose.yml -f docker-compose.dev.yml up --build"
   },
   "author": "",
   "license": "ISC"
