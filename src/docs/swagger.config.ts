@@ -82,16 +82,18 @@ const swaggerDefinition: SwaggerDefinition = {
       name: 'Services',
       description: 'Service management endpoints',
     },
+    {
+      name: 'Alerts',
+      description: 'Security alert queue management endpoints',
+    },
   ],
 };
 
 const options: swaggerJsdoc.Options = {
   definition: swaggerDefinition,
   apis: [
-    path.join(__dirname, '../app.ts'),
-    path.join(__dirname, '../routes/**/*.ts'),
-    path.join(__dirname, '../modules/**/routes/*.ts'),
-    path.join(__dirname, '../modules/**/controllers/*.ts'),
+    path.join(__dirname, '../app.{ts,js}'),
+    path.join(__dirname, './openapi.docs.{ts,js}'),
   ],
 };
 
