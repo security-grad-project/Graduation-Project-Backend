@@ -77,8 +77,6 @@ model User {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  devices Device[]
-
   services Service[]
 }
 
@@ -86,9 +84,6 @@ model Device {
   id        String   @id @default(uuid())
   ip        String
   hostName  String
-  port      Int
-  userId    String
-  user      User     @relation(fields: [userId], references: [id])
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -100,9 +95,10 @@ model Device {
 model Service {
   id        String   @id @default(uuid())
   type      String
+  port      Int
   user      User     @relation(fields: [userId], references: [id])
   userId    String
-  device    Device   @relation(fields: [deviceId], references: [id])
+  device    Device   @relation(fields: [deviceId], references: [id], onDelete: Cascade)
   deviceId  String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -117,7 +113,7 @@ model Rule {
   updatedAt   DateTime @updatedAt
 
   alerts Alert[]
-  
+
   @@index([type])
   @@index([createdAt])
   @@index([name])
@@ -132,9 +128,12 @@ model Alert {
   updatedAt   DateTime @updatedAt
   rule        Rule     @relation(fields: [ruleId], references: [id], onDelete: Cascade)
   ruleId      String
-  device      Device   @relation(fields: [deviceId], references: [id])
-  deviceId    String
+  device      Device?   @relation(fields: [deviceId], references: [id])
+  deviceId    String?
   confidence  Float
   severity    Severity
   status      Status
+  scope       String?
+  source      String?
+  mitre       String[] 
 }

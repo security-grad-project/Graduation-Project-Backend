@@ -1,6 +1,14 @@
 version: '3.8'
 
 services:
+  api:
+    container_name: graduation_backend
+    env_file:
+      - .env
+    depends_on:
+      - elasticsearch
+      - postgres
+      - mongo
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:8.12.0
     container_name: elasticsearch
@@ -8,7 +16,7 @@ services:
       - discovery.type=single-node
       - xpack.security.enabled=true
       - xpack.security.http.ssl.enabled=false
-      - ELASTIC_PASSWORD=changeme
+      - ELASTIC_PASSWORD=${ELASTICSEARCH_PASSWORD}
       - 'ES_JAVA_OPTS=-Xms512m -Xmx512m'
     ports:
       - '127.0.0.1:9200:9200'
@@ -22,6 +30,45 @@ services:
       retries: 5
     restart: unless-stopped
 
+  postgres:
+    image: postgres:16
+    container_name: postgres_db
+    env_file:
+      - .env
+    ports:
+      - '5433:5432'
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  mongo:
+    image: mongo
+    container_name: mongo_db
+    volumes:
+      - mongo_data:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_ROOT_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ROOT_PASSWORD}
+      MONGO_INITDB_DATABASE: ${MONGO_DB_NAME}
+    ports:
+      - '27017:27017'
+    restart: unless-stopped
+  mongo-express:
+    image: mongo-express
+    ports:
+      - 8082:8081
+    environment:
+      ME_CONFIG_MONGODB_URL: mongodb://${MONGO_ROOT_USER}:${MONGO_ROOT_PASSWORD}@mongo:27017/
+      ME_CONFIG_BASICAUTH_ENABLED: true
+      ME_CONFIG_BASICAUTH_USERNAME: ${MONGO_EXPRESS_USER}
+      ME_CONFIG_BASICAUTH_PASSWORD: ${MONGO_EXPRESS_PASS}
+    depends_on:
+      - mongo
+
 volumes:
   elasticsearch_data:
+    driver: local
+  postgres_data:
+    driver: local
+  mongo_data:
     driver: local

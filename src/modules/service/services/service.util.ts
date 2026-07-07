@@ -12,6 +12,15 @@ export const buildServiceFilter = (query: ListServicesQueryDto): Prisma.ServiceW
 
   if (query.deviceId) where.deviceId = query.deviceId;
 
+  if (query.port) {
+    if (query.port.includes('-')) {
+      const [min, max] = query.port.split('-').map(Number);
+      where.port = { gte: min, lte: max };
+    } else {
+      where.port = Number(query.port);
+    }
+  }
+
   if (query.startDate || query.endDate) {
     where.createdAt = {};
     if (query.startDate) where.createdAt.gte = query.startDate;

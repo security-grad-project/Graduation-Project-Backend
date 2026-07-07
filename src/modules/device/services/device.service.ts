@@ -6,14 +6,13 @@ import { DeviceQueryOptions as GetDeviceQueryOptions } from '../types/device.typ
 import logger from '../../../common/utils/logger';
 import { buildDeviceFilter } from './device.utils';
 import { createPrismaStream, paginate } from '../../../common/utils/primsa-util';
+import { Prisma } from '@prisma/client';
 
 export const createDeviceService = async (data: CreateDeviceDto) => {
   const device = await prisma.device.create({
     data: {
       ip: data.ip,
       hostName: data.hostName,
-      port: data.port,
-      userId: data.userId,
     },
   });
 
@@ -54,10 +53,14 @@ export const deleteDeviceService = async (id: string) => {
 
 export const listDevicesService = async (query: ListDevicesQueryDto) => {
   const where = buildDeviceFilter({
-    userId: query.userId,
     ip: query.ip,
     hostName: query.hostName,
+    createdAt: query.createdAt,
   } as any);
+
+  const include: Prisma.DeviceInclude = {};
+  if (query.includeAlerts) include.alerts = true;
+  if (query.includeServices) include.services = true;
 
   return await paginate(
     prisma.device,
@@ -68,13 +71,14 @@ export const listDevicesService = async (query: ListDevicesQueryDto) => {
       sortOrder: query.sortOrder,
     },
     where,
+    Object.keys(include).length > 0 ? include : undefined,
   );
 };
 
 export const streamAllDevicesService = (query: {
-  userId?: string;
   ip?: string;
   hostName?: string;
+  createdAt?: string;
 }) => {
   const where = buildDeviceFilter(query as any);
   return createPrismaStream(prisma.device, where, 3);
