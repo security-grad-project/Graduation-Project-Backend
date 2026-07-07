@@ -9,7 +9,6 @@ services:
       NODE_ENV: production
       PORT: 3000
       DATABASE_URL: ${DATABASE_URL:?DATABASE_URL is required}
-      MONGODB_URL: mongodb://${MONGO_ROOT_USER:-root}:${MONGO_ROOT_PASSWORD:-example}@mongo:27017/${MONGO_DB_NAME:-graduation_db}?authSource=admin
       JWT_ACCESS_KEY: ${JWT_ACCESS_KEY:?JWT_ACCESS_KEY is required}
       JWT_REFRESH_KEY: ${JWT_REFRESH_KEY:?JWT_REFRESH_KEY is required}
       ACCESS_TOKEN_EXPIRED_IN: ${ACCESS_TOKEN_EXPIRED_IN:-1h}
@@ -22,8 +21,6 @@ services:
       - '${API_PORT:-3000}:3000'
     depends_on:
       elasticsearch:
-        condition: service_healthy
-      mongo:
         condition: service_healthy
     restart: unless-stopped
 
@@ -48,40 +45,6 @@ services:
       retries: 5
     restart: unless-stopped
 
-  mongo:
-    image: mongo
-    container_name: mongo_db
-    volumes:
-      - mongo_data:/data/db
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: ${MONGO_ROOT_USER:-root}
-      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ROOT_PASSWORD:-example}
-      MONGO_INITDB_DATABASE: ${MONGO_DB_NAME:-graduation_db}
-    ports:
-      - '27017:27017'
-    healthcheck:
-      test: ['CMD-SHELL', 'mongosh --quiet --eval "db.adminCommand(''ping'').ok" -u "$${MONGO_INITDB_ROOT_USERNAME}" -p "$${MONGO_INITDB_ROOT_PASSWORD}" --authenticationDatabase admin | grep 1']
-      interval: 10s
-      timeout: 5s
-      retries: 5
-    restart: unless-stopped
-
-  mongo-express:
-    image: mongo-express
-    ports:
-      - '8082:8081'
-    environment:
-      ME_CONFIG_MONGODB_URL: mongodb://${MONGO_ROOT_USER:-root}:${MONGO_ROOT_PASSWORD:-example}@mongo:27017/
-      ME_CONFIG_BASICAUTH_ENABLED: true
-      ME_CONFIG_BASICAUTH_USERNAME: ${MONGO_EXPRESS_USER:-admin}
-      ME_CONFIG_BASICAUTH_PASSWORD: ${MONGO_EXPRESS_PASS:-pass}
-    depends_on:
-      mongo:
-        condition: service_healthy
-    restart: unless-stopped
-
 volumes:
   elasticsearch_data:
-    driver: local
-  mongo_data:
     driver: local

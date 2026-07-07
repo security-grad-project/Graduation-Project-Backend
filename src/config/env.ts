@@ -10,7 +10,6 @@ export default {
   PORT: env.get('PORT').default('3000').asPortNumber(),
 
   DATABASE_URL: env.get('DATABASE_URL').required().asString(),
-  MONGODB_URL: env.get('MONGODB_URL').required().asString(),
 
   JWT_REFRESH_KEY: env.get('JWT_REFRESH_KEY').required().asString(),
   JWT_ACCESS_KEY: env.get('JWT_ACCESS_KEY').required().asString(),
