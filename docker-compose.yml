@@ -1,14 +1,32 @@
-version: '3.8'
-
 services:
   api:
+    build:
+      context: .
+      target: production
+    image: graduation-project-backend:latest
     container_name: graduation_backend
-    env_file:
-      - .env
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      DATABASE_URL: ${DATABASE_URL:?DATABASE_URL is required}
+      MONGODB_URL: mongodb://${MONGO_ROOT_USER:-root}:${MONGO_ROOT_PASSWORD:-example}@mongo:27017/${MONGO_DB_NAME:-graduation_db}?authSource=admin
+      JWT_ACCESS_KEY: ${JWT_ACCESS_KEY:?JWT_ACCESS_KEY is required}
+      JWT_REFRESH_KEY: ${JWT_REFRESH_KEY:?JWT_REFRESH_KEY is required}
+      ACCESS_TOKEN_EXPIRED_IN: ${ACCESS_TOKEN_EXPIRED_IN:-1h}
+      REFRESH_TOKEN_EXPIRED_IN: ${REFRESH_TOKEN_EXPIRED_IN:-7d}
+      FRONTEND_URL: ${FRONTEND_URL:-}
+      ELASTICSEARCH_URL: http://elasticsearch:9200
+      ELASTICSEARCH_USERNAME: ${ELASTICSEARCH_USERNAME:-elastic}
+      ELASTICSEARCH_PASSWORD: ${ELASTICSEARCH_PASSWORD:-changeme}
+    ports:
+      - '${API_PORT:-3000}:3000'
     depends_on:
-      - elasticsearch
-      - postgres
-      - mongo
+      elasticsearch:
+        condition: service_healthy
+      mongo:
+        condition: service_healthy
+    restart: unless-stopped
+
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:8.12.0
     container_name: elasticsearch
@@ -16,29 +34,18 @@ services:
       - discovery.type=single-node
       - xpack.security.enabled=true
       - xpack.security.http.ssl.enabled=false
-      - ELASTIC_PASSWORD=${ELASTICSEARCH_PASSWORD}
+      - ELASTIC_PASSWORD=${ELASTICSEARCH_PASSWORD:-changeme}
       - 'ES_JAVA_OPTS=-Xms512m -Xmx512m'
-    ports:
-      - '127.0.0.1:9200:9200'
-      - '127.0.0.1:9300:9300'
+    expose:
+      - '9200'
+      - '9300'
     volumes:
       - elasticsearch_data:/usr/share/elasticsearch/data
     healthcheck:
-      test: ['CMD-SHELL', 'curl -s http://localhost:9200/_cluster/health || exit 1']
+      test: ['CMD-SHELL', 'curl -fsS -u elastic:$${ELASTIC_PASSWORD} http://localhost:9200/_cluster/health || exit 1']
       interval: 30s
       timeout: 10s
       retries: 5
-    restart: unless-stopped
-
-  postgres:
-    image: postgres:16
-    container_name: postgres_db
-    env_file:
-      - .env
-    ports:
-      - '5433:5432'
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
     restart: unless-stopped
 
   mongo:
@@ -47,28 +54,34 @@ services:
     volumes:
       - mongo_data:/data/db
     environment:
-      MONGO_INITDB_ROOT_USERNAME: ${MONGO_ROOT_USER}
-      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ROOT_PASSWORD}
-      MONGO_INITDB_DATABASE: ${MONGO_DB_NAME}
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_ROOT_USER:-root}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ROOT_PASSWORD:-example}
+      MONGO_INITDB_DATABASE: ${MONGO_DB_NAME:-graduation_db}
     ports:
       - '27017:27017'
+    healthcheck:
+      test: ['CMD-SHELL', 'mongosh --quiet --eval "db.adminCommand(''ping'').ok" -u "$${MONGO_INITDB_ROOT_USERNAME}" -p "$${MONGO_INITDB_ROOT_PASSWORD}" --authenticationDatabase admin | grep 1']
+      interval: 10s
+      timeout: 5s
+      retries: 5
     restart: unless-stopped
+
   mongo-express:
     image: mongo-express
     ports:
-      - 8082:8081
+      - '8082:8081'
     environment:
-      ME_CONFIG_MONGODB_URL: mongodb://${MONGO_ROOT_USER}:${MONGO_ROOT_PASSWORD}@mongo:27017/
+      ME_CONFIG_MONGODB_URL: mongodb://${MONGO_ROOT_USER:-root}:${MONGO_ROOT_PASSWORD:-example}@mongo:27017/
       ME_CONFIG_BASICAUTH_ENABLED: true
-      ME_CONFIG_BASICAUTH_USERNAME: ${MONGO_EXPRESS_USER}
-      ME_CONFIG_BASICAUTH_PASSWORD: ${MONGO_EXPRESS_PASS}
+      ME_CONFIG_BASICAUTH_USERNAME: ${MONGO_EXPRESS_USER:-admin}
+      ME_CONFIG_BASICAUTH_PASSWORD: ${MONGO_EXPRESS_PASS:-pass}
     depends_on:
-      - mongo
+      mongo:
+        condition: service_healthy
+    restart: unless-stopped
 
 volumes:
   elasticsearch_data:
-    driver: local
-  postgres_data:
     driver: local
   mongo_data:
     driver: local
