@@ -91,10 +91,7 @@ const swaggerDefinition: SwaggerDefinition = {
 
 const options: swaggerJsdoc.Options = {
   definition: swaggerDefinition,
-  apis: [
-    path.join(__dirname, '../app.{ts,js}'),
-    path.join(__dirname, './openapi.docs.{ts,js}'),
-  ],
+  apis: [path.join(__dirname, '../app.{ts,js}'), path.join(__dirname, './openapi.docs.{ts,js}')],
 };
 
 export const swaggerSpec = swaggerJsdoc(options);
