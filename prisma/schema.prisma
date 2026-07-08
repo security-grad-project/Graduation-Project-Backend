@@ -3,7 +3,7 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "cockroachdb"
 }
 
 enum Role {
@@ -26,7 +26,9 @@ enum Status {
   IGNORED
   OTHER
 }
-
+enum crdb_internal_region {
+  aws_eu_central_1 @map("aws-eu-central-1")
+}
 model Analyst {
   id            String         @id @default(uuid())
   firstName     String

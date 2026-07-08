@@ -1,7 +1,6 @@
 import 'dotenv/config';
 import http from 'http';
 import { testPostgresConnection, prisma } from './config/postgres';
-// import { mongoConnection } from './config/mongodb';
 // import { elasticClient, testElasticConnection } from './config/elasticsearch';
 import app from './app';
 import env from './config/env';
@@ -19,7 +18,6 @@ process.on('uncaughtException', (err) => {
 const startServer = async () => {
   try {
     await testPostgresConnection();
-    // await mongoConnection();
     // await testElasticConnection();
 
     // Start token cleanup job
