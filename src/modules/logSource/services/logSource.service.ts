@@ -91,7 +91,7 @@ export const getElasticsearchStats = async (indexName: string) => {
             });
             const failedDocs = failedParsingRes.count;
             parseSuccessRate = docCount > 0 ? parseFloat((100 - ((failedDocs / docCount) * 100)).toFixed(1)) : 100;
-        } catch (e) {
+        } catch {
             // Ignore if index mapping doesn't have tags yet
         }
 
@@ -113,7 +113,7 @@ export const getElasticsearchStats = async (indexName: string) => {
             ecsCoverage
     };
 
-    }catch(error){
+    } catch {
         return {
             totalEvents: 0,
             events24h: 0,

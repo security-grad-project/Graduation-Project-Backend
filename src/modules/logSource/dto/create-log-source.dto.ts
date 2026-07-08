@@ -3,8 +3,8 @@ export interface CreateLogSourceDto {
   category: 'endpoint' | 'windows' | 'network' | 'cloud' | 'application';
   vendor: string;
   product: string;
-  description: string; 
-  dataset: string;     
+  description: string;
+  dataset: string;
   agent: string;
   pipeline: string;
   index: string;
