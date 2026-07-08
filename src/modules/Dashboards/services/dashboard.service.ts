@@ -1,3 +1,4 @@
+import ApiErrorHandler from '../../../common/utils/ApiErrorHandler';
 import logger from '../../../common/utils/logger';
 import { prisma } from '../../../config/postgres';
 import { createDashboardData, updateDashboardData } from '../types/types';
@@ -29,4 +30,12 @@ export const updateDashboardService = async (id: string, data: updateDashboardDa
 export const deleteDashboardService = async (id: string) => {
   await prisma.dashboard.delete({ where: { id } });
   logger.info(`dashboard deleted successfully: id ${id}`);
+};
+
+export const getDashboardService = async (id: string) => {
+  const dashboard = await prisma.dashboard.findUnique({ where: { id } });
+  if (!dashboard) throw new ApiErrorHandler(404, 'Dashboard Not Found');
+
+  logger.info(`dashboard retrieved successfully: id ${id}`);
+  return dashboard;
 };

@@ -7,6 +7,7 @@ import {
   createDashboardService,
   updateDashboardService,
   deleteDashboardService,
+  getDashboardService,
 } from '../services/dashboard.service';
 import { IRequest } from '../../../common/interfaces/types';
 
@@ -38,4 +39,15 @@ export const deleteDashboard = catchAsync(async (req: Request, res: Response) =>
   await deleteDashboardService(id);
 
   res.status(STATUS_CODE.NO_CONTENT).send();
+});
+
+export const getDashboardById = catchAsync(async (req: Request, res: Response) => {
+  const id = req.params.id as string;
+  const dashboard = await getDashboardService(id);
+
+  res.status(STATUS_CODE.SUCCESS).json({
+    status: STATUS.SUCCESS,
+    data: dashboard,
+    message: 'Dashboard retrieved successfully',
+  });
 });
