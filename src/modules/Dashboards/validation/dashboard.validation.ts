@@ -19,3 +19,7 @@ export const updateDashboardValidation = createDashboardValidation.partial();
 export const getDashboardValidation = z.object({
   id: z.uuid(),
 });
+
+export const deleteDashboardValidation = z.object({
+  id: z.uuid(),
+});

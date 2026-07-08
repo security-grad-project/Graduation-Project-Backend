@@ -1,7 +1,6 @@
 import logger from '../../../common/utils/logger';
 import { prisma } from '../../../config/postgres';
 import { createDashboardData, updateDashboardData } from '../types/types';
-import ApiErrorHandler from '../../../common/utils/ApiErrorHandler';
 
 export const createDashboardService = async (ownerId: string, data: createDashboardData) => {
   const dashboard = await prisma.dashboard.create({
@@ -18,9 +17,6 @@ export const createDashboardService = async (ownerId: string, data: createDashbo
 };
 
 export const updateDashboardService = async (id: string, data: updateDashboardData) => {
-  const existing = await prisma.dashboard.findUnique({ where: { id } });
-  if (!existing) throw new ApiErrorHandler(404, 'Dashboard Not Found');
-
   const dashboard = await prisma.dashboard.update({
     where: { id },
     data: { ...data },
@@ -28,4 +24,9 @@ export const updateDashboardService = async (id: string, data: updateDashboardDa
 
   logger.info(`dashboard updated successfully: id ${id}`);
   return dashboard;
+};
+
+export const deleteDashboardService = async (id: string) => {
+  await prisma.dashboard.delete({ where: { id } });
+  logger.info(`dashboard deleted successfully: id ${id}`);
 };

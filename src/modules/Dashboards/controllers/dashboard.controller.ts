@@ -3,7 +3,11 @@ import catchAsync from '../../../common/utils/catchAsync';
 import { STATUS_CODE } from '../../../common/constants/responseCode';
 import { STATUS } from '../../../common/constants/responseStatus';
 import { createDashboardData, updateDashboardData } from '../types/types';
-import { createDashboardService, updateDashboardService } from '../services/dashboard.service';
+import {
+  createDashboardService,
+  updateDashboardService,
+  deleteDashboardService,
+} from '../services/dashboard.service';
 import { IRequest } from '../../../common/interfaces/types';
 
 export const createDashboard = catchAsync(async (req: IRequest, res: Response) => {
@@ -27,4 +31,11 @@ export const updateDashboard = catchAsync(async (req: Request, res: Response) =>
     data: dashboard,
     message: 'Dashboard updated successfully',
   });
+});
+
+export const deleteDashboard = catchAsync(async (req: Request, res: Response) => {
+  const id = req.params.id as string;
+  await deleteDashboardService(id);
+
+  res.status(STATUS_CODE.NO_CONTENT).send();
 });
