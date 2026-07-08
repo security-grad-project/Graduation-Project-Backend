@@ -2,12 +2,13 @@ import { Request, Response } from 'express';
 import catchAsync from '../../../common/utils/catchAsync';
 import { STATUS_CODE } from '../../../common/constants/responseCode';
 import { STATUS } from '../../../common/constants/responseStatus';
-import { createDashboardData, updateDashboardData } from '../types/types';
+import { createDashboardData, ListDashboardsQuery, updateDashboardData } from '../types/types';
 import {
   createDashboardService,
   updateDashboardService,
   deleteDashboardService,
   getDashboardService,
+  getAllDashboardsService,
 } from '../services/dashboard.service';
 import { IRequest } from '../../../common/interfaces/types';
 
@@ -49,5 +50,16 @@ export const getDashboardById = catchAsync(async (req: Request, res: Response) =
     status: STATUS.SUCCESS,
     data: dashboard,
     message: 'Dashboard retrieved successfully',
+  });
+});
+
+export const getAllDashboards = catchAsync(async (req: Request, res: Response) => {
+  const query: ListDashboardsQuery = req.query as unknown as ListDashboardsQuery;
+  const dashboards = await getAllDashboardsService(query);
+
+  res.status(STATUS_CODE.SUCCESS).json({
+    status: STATUS.SUCCESS,
+    data: dashboards.data,
+    meta: dashboards.meta,
   });
 });

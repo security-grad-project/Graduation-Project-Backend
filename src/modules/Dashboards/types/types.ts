@@ -15,3 +15,9 @@ export interface createDashboardData {
 }
 
 export type updateDashboardData = Partial<createDashboardData>;
+
+export interface ListDashboardsQuery {
+  search?: string;
+  page: number;
+  limit: number;
+}
