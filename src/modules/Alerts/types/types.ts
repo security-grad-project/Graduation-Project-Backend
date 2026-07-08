@@ -1,0 +1,22 @@
+import { Severity, Status } from '@prisma/client';
+
+export interface ListAlertsQuery {
+  page: number;
+  limit: number;
+  search?: string;
+  sortBy?: string;
+  sortOrder?: 'asc' | 'desc';
+  severity?: Severity;
+  status?: Status;
+  deviceId?: string;
+}
+
+export interface updateAlertStatusData {
+  status: Status;
+}
+
+export interface AlertStatsQuery {
+  severity?: Severity;
+  status?: Status;
+  search?: string;
+}

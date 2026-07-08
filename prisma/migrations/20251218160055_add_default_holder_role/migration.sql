@@ -1,2 +1,0 @@
--- AlterTable
-ALTER TABLE "Analyst" ALTER COLUMN "role" SET DEFAULT 'SOC_ADMIN';

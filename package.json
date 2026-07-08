@@ -9,12 +9,9 @@
     "dotenv": "^17.2.3",
     "env-var": "^7.5.0",
     "express": "^5.1.0",
-    "express-mongo-sanitize": "^2.2.0",
     "express-rate-limit": "^8.2.1",
     "helmet": "^8.1.0",
     "jsonwebtoken": "^9.0.3",
-    "mongodb": "^7.0.0",
-    "mongoose": "^9.0.0",
     "morgan": "^1.10.1",
     "pg": "^8.16.3",
     "rest-collection-stream": "^0.0.1",
@@ -56,7 +53,13 @@
     "lint": "eslint . --ext .ts",
     "lint:fix": "eslint . --ext .ts --fix",
     "format": "prettier --write .",
-    "start:dev": "nodemon"
+    "build": "npx prisma generate && tsc",
+    "start": "node dist/src/server.js",
+    "start:dev": "nodemon",
+    "docker:build": "docker build --target production -t graduation-project-backend:latest .",
+    "docker:up": "docker compose up --build",
+    "docker:up:detached": "docker compose up --build -d",
+    "docker:dev": "docker compose -f docker-compose.yml -f docker-compose.dev.yml up --build"
   },
   "author": "",
   "license": "ISC"
