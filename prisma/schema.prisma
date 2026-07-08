@@ -39,6 +39,7 @@ model Analyst {
   createdAt     DateTime       @default(now())
   updatedAt     DateTime       @updatedAt
   refreshTokens RefreshToken[]
+  dashboards    Dashboard[]
 }
 
 model RefreshToken {
@@ -136,4 +137,21 @@ model Alert {
   scope       String?
   source      String?
   mitre       String[] 
+}
+
+model Dashboard {
+  id          String   @id @default(uuid())
+  title       String
+  description String?
+  tags        String[]
+  ownerId     String
+  owner       Analyst  @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  panels      Json     @default("[]")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+
+  @@index([ownerId])
+  @@index([createdAt])
+  @@index([title])
 }
