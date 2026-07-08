@@ -58,11 +58,11 @@ router.use(authenticate);
  *         schema:
  *           type: string
  *         description: Filter by device ID
-      - in: query
-        name: port
-        schema:
-          type: string
-        description: Filter by port (single value or range like 80-90)
+ *       - in: query
+ *         name: port
+ *         schema:
+ *           type: string
+ *         description: Filter by port (single value or range like 80-90)
  *       - in: query
  *         name: page
  *         schema:
@@ -179,11 +179,11 @@ router.get(
  *         schema:
  *           type: string
  *         description: Filter by device ID
-      - in: query
-        name: port
-        schema:
-          type: string
-        description: Filter by port (single value or range like 80-90)
+ *       - in: query
+ *         name: port
+ *         schema:
+ *           type: string
+ *         description: Filter by port (single value or range like 80-90)
  *     responses:
  *       200:
  *         description: Stream of service data
@@ -230,11 +230,11 @@ router.get(
  *         schema:
  *           type: string
  *         description: Filter by device ID
-      - in: query
-        name: port
-        schema:
-          type: string
-        description: Filter by port (single value or range like 80-90)
+ *       - in: query
+ *         name: port
+ *         schema:
+ *           type: string
+ *         description: Filter by port (single value or range like 80-90)
  *     responses:
  *       200:
  *         description: Service count retrieved successfully

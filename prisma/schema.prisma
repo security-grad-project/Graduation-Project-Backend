@@ -105,12 +105,16 @@ model Service {
 }
 
 model Rule {
-  id          String   @id @default(uuid())
-  name        String   @unique
-  description String
-  type        String
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id           String   @id @default(uuid())
+  name         String   @unique
+  description  String
+  type         String
+  mitreTactics String[] 
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  
+  logSourceId  String?
+  logSource    LogSource? @relation(fields: [logSourceId], references: [id], onDelete: SetNull)
 
   alerts Alert[]
 
@@ -133,4 +137,30 @@ model Alert {
   confidence  Float
   severity    Severity
   status      Status
+}
+
+model LogSource {
+  id            String   @id @default(uuid())
+  name          String   @unique
+  category      String 
+  vendor        String
+  product       String
+  description   String
+  dataset       String
+  type          String   @default("logs")
+  index         String   // The Elasticsearch index pattern to query
+  agent         String
+  agentVersion  String   @default("9.2.1")
+  pipeline      String
+  format        String   @default("ECS")
+  retentionDays Int      @default(90)
+  ilmPolicy     String   @default("logs-90d")
+  shards        Int      @default(1)
+  owner         String   @default("SOC Team")
+  enabled       Boolean  @default(true)
+  tags          String[] // Postgres array of strings
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  rules         Rule[]
 }

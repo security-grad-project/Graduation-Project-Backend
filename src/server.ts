@@ -2,7 +2,7 @@ import 'dotenv/config';
 import http from 'http';
 import { testPostgresConnection, prisma } from './config/postgres';
 // import { mongoConnection } from './config/mongodb';
-// import { elasticClient, testElasticConnection } from './config/elasticsearch';
+import { elasticClient, testElasticConnection } from './config/elasticsearch';
 import app from './app';
 import env from './config/env';
 import logger from './common/utils/logger';
@@ -20,7 +20,7 @@ const startServer = async () => {
   try {
     await testPostgresConnection();
     // await mongoConnection();
-    // await testElasticConnection();
+    await testElasticConnection();
 
     // Start token cleanup job
     startTokenCleanupJob();
@@ -35,7 +35,7 @@ const startServer = async () => {
         server.close(async () => {
           stopTokenCleanupJob();
           await prisma.$disconnect().catch(() => undefined);
-          // await elasticClient.close().catch(() => undefined);
+          await elasticClient.close().catch(() => undefined);
           process.exit(1);
         });
       } else {
@@ -49,7 +49,7 @@ const startServer = async () => {
         server.close(async () => {
           stopTokenCleanupJob();
           await prisma.$disconnect().catch(() => undefined);
-          // await elasticClient.close().catch(() => undefined);
+          await elasticClient.close().catch(() => undefined);
           process.exit(0);
         });
       } else {
