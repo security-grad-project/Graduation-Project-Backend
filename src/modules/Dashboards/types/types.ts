@@ -13,3 +13,5 @@ export interface createDashboardData {
   tags?: string[];
   panels?: any;
 }
+
+export type updateDashboardData = Partial<createDashboardData>;

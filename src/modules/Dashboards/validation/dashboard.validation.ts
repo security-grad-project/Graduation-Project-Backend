@@ -13,3 +13,9 @@ export const createDashboardValidation = z.object({
   tags: z.array(z.string().trim()).optional(),
   panels: z.array(panelValidation).optional(),
 });
+
+export const updateDashboardValidation = createDashboardValidation.partial();
+
+export const getDashboardValidation = z.object({
+  id: z.uuid(),
+});
