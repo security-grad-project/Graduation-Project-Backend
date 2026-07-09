@@ -194,6 +194,38 @@
  *         status:
  *           type: string
  *           enum: [OPEN, IN_PROGRESS, RESOLVED, FALSE_POSITIVE, IGNORED, OTHER]
+ *     LogSourceInput:
+ *       type: object
+ *       required: [name, category, vendor, product, description, dataset, agent, pipeline, index]
+ *       properties:
+ *         name:
+ *           type: string
+ *         category:
+ *           type: string
+ *         vendor:
+ *           type: string
+ *         product:
+ *           type: string
+ *         description:
+ *           type: string
+ *         dataset:
+ *           type: string
+ *         agent:
+ *           type: string
+ *         pipeline:
+ *           type: string
+ *         index:
+ *           type: string
+ *         retentionDays:
+ *           type: integer
+ *         shards:
+ *           type: integer
+ *         enabled:
+ *           type: boolean
+ *         tags:
+ *           type: array
+ *           items:
+ *             type: string
  *   responses:
  *     Unauthorized:
  *       description: Authentication required.
@@ -713,6 +745,67 @@
  *           schema: { $ref: '#/components/schemas/AlertStatusInput' }
  *     responses:
  *       200: { description: Alert status updated }
+ *       404: { $ref: '#/components/responses/NotFound' }
+ * /api/v1/log-sources:
+ *   get:
+ *     summary: List all log sources
+ *     description: Retrieve a paginated list of log sources with optional filtering by category and status. Requires authentication.
+ *     tags: [LogSources]
+ *     security: [{ bearerAuth: [] }]
+ *     parameters:
+ *       - { in: query, name: category, schema: { type: string }, description: Filter by category }
+ *       - { in: query, name: status, schema: { type: string }, description: Filter by status }
+ *       - { in: query, name: page, schema: { type: integer, default: 1 } }
+ *       - { in: query, name: limit, schema: { type: integer, default: 10 } }
+ *       - { in: query, name: sortBy, schema: { type: string } }
+ *       - { in: query, name: sortOrder, schema: { type: string, enum: [asc, desc], default: asc } }
+ *     responses:
+ *       200: { description: Paginated log sources }
+ *       401: { $ref: '#/components/responses/Unauthorized' }
+ *   post:
+ *     summary: Create a new log source
+ *     description: Create a new log source configuration. Requires SOC_ADMIN role.
+ *     tags: [LogSources]
+ *     security: [{ bearerAuth: [] }]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema: { $ref: '#/components/schemas/LogSourceInput' }
+ *     responses:
+ *       201: { description: Log source created successfully }
+ *       400: { description: Validation error }
+ *       401: { $ref: '#/components/responses/Unauthorized' }
+ *       403: { $ref: '#/components/responses/Forbidden' }
+ * /api/v1/log-sources/{id}:
+ *   get:
+ *     summary: Get a log source by ID
+ *     description: Retrieve detailed information for a specific log source by ID. Requires authentication.
+ *     tags: [LogSources]
+ *     security: [{ bearerAuth: [] }]
+ *     parameters:
+ *       - { in: path, name: id, required: true, schema: { type: string, format: uuid } }
+ *     responses:
+ *       200: { description: Log source details }
+ *       401: { $ref: '#/components/responses/Unauthorized' }
+ *       404: { $ref: '#/components/responses/NotFound' }
+ *   patch:
+ *     summary: Update a log source
+ *     description: Update an existing log source configuration by ID. Requires SOC_ADMIN role.
+ *     tags: [LogSources]
+ *     security: [{ bearerAuth: [] }]
+ *     parameters:
+ *       - { in: path, name: id, required: true, schema: { type: string, format: uuid } }
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema: { $ref: '#/components/schemas/LogSourceInput' }
+ *     responses:
+ *       200: { description: Log source updated successfully }
+ *       400: { description: Validation error }
+ *       401: { $ref: '#/components/responses/Unauthorized' }
+ *       403: { $ref: '#/components/responses/Forbidden' }
  *       404: { $ref: '#/components/responses/NotFound' }
  */
 
