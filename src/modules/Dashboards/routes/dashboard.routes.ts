@@ -5,6 +5,7 @@ import {
   deleteDashboard,
   getDashboardById,
   getAllDashboards,
+  getDashboardData,
 } from '../controllers/dashboard.controller';
 import { authenticate } from '../../../common/middlewares';
 import validationMiddleware from '../../../common/middlewares/validation.middleware';
@@ -14,6 +15,7 @@ import {
   getDashboardValidation,
   deleteDashboardValidation,
   queryDashboardsValidation,
+  dashboardDataQueryValidation,
 } from '../validation/dashboard.validation';
 
 const router = Router();
@@ -21,7 +23,11 @@ const router = Router();
 router.use(authenticate);
 
 router.get('/', validationMiddleware({ query: queryDashboardsValidation }), getAllDashboards);
-
+router.get(
+  '/:id/data',
+  validationMiddleware({ params: getDashboardValidation, query: dashboardDataQueryValidation }),
+  getDashboardData,
+);
 router.post('/', validationMiddleware({ body: createDashboardValidation }), createDashboard);
 
 router.get('/:id', validationMiddleware({ params: getDashboardValidation }), getDashboardById);
