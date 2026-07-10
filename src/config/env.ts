@@ -23,6 +23,11 @@ export default {
     .asString() as ms.StringValue,
 
   FRONTEND_URL: env.get('FRONTEND_URL').asString(),
+  COOKIE_SECURE: env.get('COOKIE_SECURE').default('false').asBoolStrict(),
+  COOKIE_SAME_SITE: env
+    .get('COOKIE_SAME_SITE')
+    .default('lax')
+    .asEnum(['strict', 'lax', 'none']) as 'strict' | 'lax' | 'none',
 
   ELASTICSEARCH_URL: env.get('ELASTICSEARCH_URL').default('http://localhost:9200').asUrlString(),
   ELASTICSEARCH_USERNAME: env.get('ELASTICSEARCH_USERNAME').default('elastic').asString(),
