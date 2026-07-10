@@ -14,6 +14,7 @@
     "jsonwebtoken": "^9.0.3",
     "morgan": "^1.10.1",
     "pg": "^8.16.3",
+    "prisma": "^7.0.0",
     "rest-collection-stream": "^0.0.1",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.1",
@@ -42,7 +43,6 @@
     "eslint-plugin-prettier": "^5.5.4",
     "nodemon": "^3.1.11",
     "prettier": "^3.6.2",
-    "prisma": "^7.0.0",
     "typescript-eslint": "^8.47.0"
   },
   "name": "graduation-project-backend",
@@ -59,7 +59,8 @@
     "docker:build": "docker build --target production -t graduation-project-backend:latest .",
     "docker:up": "docker compose up --build",
     "docker:up:detached": "docker compose up --build -d",
-    "docker:dev": "docker compose -f docker-compose.yml -f docker-compose.dev.yml up --build"
+    "docker:dev": "docker compose -f docker-compose.yml -f docker-compose.dev.yml up --build",
+    "docker:prod": "docker compose -f docker-compose.yml up --build -d"
   },
   "author": "",
   "license": "ISC"

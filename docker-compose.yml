@@ -8,20 +8,41 @@ services:
     environment:
       NODE_ENV: production
       PORT: 3000
-      DATABASE_URL: ${DATABASE_URL:?DATABASE_URL is required}
-      JWT_ACCESS_KEY: ${JWT_ACCESS_KEY:?JWT_ACCESS_KEY is required}
-      JWT_REFRESH_KEY: ${JWT_REFRESH_KEY:?JWT_REFRESH_KEY is required}
+      DATABASE_URL: postgresql://${POSTGRES_USER:-graduation}:${POSTGRES_PASSWORD:-change_me}@postgres:5432/${POSTGRES_DB:-graduation_backend}?schema=public
+      JWT_ACCESS_KEY: ${JWT_ACCESS_KEY:-change-me-access-token-secret}
+      JWT_REFRESH_KEY: ${JWT_REFRESH_KEY:-change-me-refresh-token-secret}
       ACCESS_TOKEN_EXPIRED_IN: ${ACCESS_TOKEN_EXPIRED_IN:-1h}
       REFRESH_TOKEN_EXPIRED_IN: ${REFRESH_TOKEN_EXPIRED_IN:-7d}
       FRONTEND_URL: ${FRONTEND_URL:-}
       ELASTICSEARCH_URL: http://elasticsearch:9200
       ELASTICSEARCH_USERNAME: ${ELASTICSEARCH_USERNAME:-elastic}
-      ELASTICSEARCH_PASSWORD: ${ELASTICSEARCH_PASSWORD:-changeme}
+      ELASTICSEARCH_PASSWORD: ${ELASTICSEARCH_PASSWORD:-change_me}
     ports:
       - '${API_PORT:-3000}:3000'
     depends_on:
+      postgres:
+        condition: service_healthy
       elasticsearch:
         condition: service_healthy
+    restart: unless-stopped
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: graduation_postgres
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-graduation_backend}
+      POSTGRES_USER: ${POSTGRES_USER:-graduation}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-change_me}
+      POSTGRES_INITDB_ARGS: --auth-host=scram-sha-256
+    expose:
+      - '5432'
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U "$${POSTGRES_USER}" -d "$${POSTGRES_DB}"']
+      interval: 10s
+      timeout: 5s
+      retries: 5
     restart: unless-stopped
 
   elasticsearch:
@@ -31,7 +52,7 @@ services:
       - discovery.type=single-node
       - xpack.security.enabled=true
       - xpack.security.http.ssl.enabled=false
-      - ELASTIC_PASSWORD=${ELASTICSEARCH_PASSWORD:-changeme}
+      - ELASTIC_PASSWORD=${ELASTICSEARCH_PASSWORD:-change_me}
       - 'ES_JAVA_OPTS=-Xms512m -Xmx512m'
     expose:
       - '9200'
@@ -39,12 +60,18 @@ services:
     volumes:
       - elasticsearch_data:/usr/share/elasticsearch/data
     healthcheck:
-      test: ['CMD-SHELL', 'curl -fsS -u elastic:$${ELASTIC_PASSWORD} http://localhost:9200/_cluster/health || exit 1']
+      test:
+        [
+          'CMD-SHELL',
+          'curl -fsS -u elastic:$${ELASTIC_PASSWORD} http://localhost:9200/_cluster/health || exit 1',
+        ]
       interval: 30s
       timeout: 10s
       retries: 5
     restart: unless-stopped
 
 volumes:
+  postgres_data:
+    driver: local
   elasticsearch_data:
     driver: local
