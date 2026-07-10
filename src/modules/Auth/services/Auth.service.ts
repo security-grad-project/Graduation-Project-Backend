@@ -28,7 +28,7 @@ export const setRefreshTokenCookie = (res: Response, refreshToken: string): void
     secure: config.COOKIE_SECURE,
     sameSite: config.COOKIE_SAME_SITE,
     maxAge: ms(config.REFRESH_TOKEN_EXPIRED_IN),
-    path: '/api/v1/auth',
+    path: '/',
   });
 };
 
@@ -37,7 +37,7 @@ export const clearRefreshTokenCookie = (res: Response): void => {
     httpOnly: true,
     secure: config.COOKIE_SECURE,
     sameSite: config.COOKIE_SAME_SITE,
-    path: '/api/v1/auth',
+    path: '/',
   });
 };
 
