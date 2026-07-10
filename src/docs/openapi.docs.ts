@@ -716,4 +716,120 @@
  *       404: { $ref: '#/components/responses/NotFound' }
  */
 
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     DashboardPanel:
+ *       type: object
+ *       required: [id, type, title, spec]
+ *       properties:
+ *         id: { type: string, example: p1 }
+ *         type: { type: string, enum: [metric, histogram, breakdown] }
+ *         title: { type: string, example: Total events }
+ *         spec:
+ *           type: object
+ *           description: "metric: { index, aggType: count|cardinality|ratio, field?, filter?, numeratorFilter? } | histogram: { index, interval?, filter? } | breakdown: { index, field, size?, filter? }"
+ *           example: { index: "logs-auditbeat.auditd-*", aggType: cardinality, field: host.name }
+ *     Dashboard:
+ *       type: object
+ *       properties:
+ *         id: { type: string, format: uuid }
+ *         title: { type: string, example: Auditd Overview }
+ *         description: { type: string, nullable: true, example: Kernel audit events }
+ *         tags: { type: array, items: { type: string }, example: [auditd] }
+ *         ownerId: { type: string, format: uuid }
+ *         panels: { type: array, items: { $ref: '#/components/schemas/DashboardPanel' } }
+ *         createdAt: { type: string, format: date-time }
+ *         updatedAt: { type: string, format: date-time }
+ *     DashboardListItem:
+ *       type: object
+ *       properties:
+ *         id: { type: string, format: uuid }
+ *         title: { type: string }
+ *         desc: { type: string }
+ *         tags: { type: array, items: { type: string } }
+ *     DashboardInput:
+ *       type: object
+ *       required: [title]
+ *       properties:
+ *         title: { type: string, example: Auditd Overview }
+ *         description: { type: string, example: Kernel audit events }
+ *         tags: { type: array, items: { type: string }, example: [auditd] }
+ *         panels: { type: array, items: { $ref: '#/components/schemas/DashboardPanel' } }
+ */
+
+/**
+ * @swagger
+ * /api/v1/dashboards:
+ *   get:
+ *     tags: [Dashboards]
+ *     summary: List dashboards
+ *     security: [{ bearerAuth: [] }]
+ *     parameters:
+ *       - { in: query, name: search, schema: { type: string } }
+ *       - { in: query, name: page, schema: { type: integer, default: 1 } }
+ *       - { in: query, name: limit, schema: { type: integer, default: 10 } }
+ *     responses:
+ *       200: { description: Paginated dashboard list }
+ *       401: { $ref: '#/components/responses/Unauthorized' }
+ *   post:
+ *     tags: [Dashboards]
+ *     summary: Create dashboard
+ *     security: [{ bearerAuth: [] }]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema: { $ref: '#/components/schemas/DashboardInput' }
+ *     responses:
+ *       201: { description: Dashboard created }
+ *       401: { $ref: '#/components/responses/Unauthorized' }
+ * /api/v1/dashboards/{id}:
+ *   get:
+ *     tags: [Dashboards]
+ *     summary: Get dashboard definition
+ *     security: [{ bearerAuth: [] }]
+ *     parameters:
+ *       - { in: path, name: id, required: true, schema: { type: string, format: uuid } }
+ *     responses:
+ *       200: { description: Dashboard details }
+ *       404: { $ref: '#/components/responses/NotFound' }
+ *   patch:
+ *     tags: [Dashboards]
+ *     summary: Update dashboard
+ *     security: [{ bearerAuth: [] }]
+ *     parameters:
+ *       - { in: path, name: id, required: true, schema: { type: string, format: uuid } }
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema: { $ref: '#/components/schemas/DashboardInput' }
+ *     responses:
+ *       200: { description: Dashboard updated }
+ *       404: { $ref: '#/components/responses/NotFound' }
+ *   delete:
+ *     tags: [Dashboards]
+ *     summary: Delete dashboard
+ *     security: [{ bearerAuth: [] }]
+ *     parameters:
+ *       - { in: path, name: id, required: true, schema: { type: string, format: uuid } }
+ *     responses:
+ *       204: { description: Dashboard deleted }
+ *       404: { $ref: '#/components/responses/NotFound' }
+ * /api/v1/dashboards/{id}/data:
+ *   get:
+ *     tags: [Dashboards]
+ *     summary: Get live panel data over a time range
+ *     security: [{ bearerAuth: [] }]
+ *     parameters:
+ *       - { in: path, name: id, required: true, schema: { type: string, format: uuid } }
+ *       - { in: query, name: from, schema: { type: string, format: date-time } }
+ *       - { in: query, name: to, schema: { type: string, format: date-time } }
+ *     responses:
+ *       200: { description: Dashboard panel data }
+ *       404: { $ref: '#/components/responses/NotFound' }
+ */
+
 export {};
