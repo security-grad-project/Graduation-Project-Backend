@@ -20,7 +20,11 @@ const logStream = fs.createWriteStream(path.join(process.cwd(), 'logs', 'api.log
   flags: 'a',
 });
 
-app.use(helmet());
+app.use(
+  helmet({
+    contentSecurityPolicy: false,
+  }),
+);
 app.use(cookieParser());
 
 app.use(express.json({ limit: '1mb' }));
