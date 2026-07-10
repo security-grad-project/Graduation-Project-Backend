@@ -1,6 +1,7 @@
 import swaggerJsdoc from 'swagger-jsdoc';
 import { SwaggerDefinition } from 'swagger-jsdoc';
 import path from 'path';
+import fs from 'fs';
 
 const swaggerDefinition: SwaggerDefinition = {
   openapi: '3.0.0',
@@ -93,9 +94,15 @@ const swaggerDefinition: SwaggerDefinition = {
   ],
 };
 
+const sourceDocsPath = path.join(process.cwd(), 'src/docs/openapi.docs.ts');
+const compiledDocsPath = path.join(__dirname, './openapi.docs.js');
+
 const options: swaggerJsdoc.Options = {
   definition: swaggerDefinition,
-  apis: [path.join(__dirname, '../app.{ts,js}'), path.join(__dirname, './openapi.docs.{ts,js}')],
+  apis: [
+    path.join(__dirname, '../app.{ts,js}'),
+    fs.existsSync(sourceDocsPath) ? sourceDocsPath : compiledDocsPath,
+  ],
 };
 
 export const swaggerSpec = swaggerJsdoc(options);

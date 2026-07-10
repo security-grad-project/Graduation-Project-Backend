@@ -21,7 +21,7 @@ CMD ["npm", "run", "start:dev"]
 FROM base AS build
 
 ENV NODE_ENV=development
-ENV DATABASE_URL=postgresql://root@localhost:26257/defaultdb?sslmode=disable
+ENV DATABASE_URL=postgresql://postgres:postgres@postgres:5432/graduation_backend?schema=public
 
 RUN npm ci
 
@@ -36,11 +36,20 @@ FROM base AS production
 
 ENV NODE_ENV=production
 
+RUN mkdir -p logs && chown -R node:node /app
+
 COPY --from=build /app/node_modules ./node_modules
 COPY --from=build /app/dist ./dist
 COPY package*.json ./
+COPY prisma.config.ts ./
+COPY src/docs ./src/docs
 COPY prisma ./prisma
+
+USER node
 
 EXPOSE 3000
 
-CMD ["npm", "start"]
+HEALTHCHECK --interval=30s --timeout=5s --start-period=30s --retries=3 \
+  CMD node -e "require('http').get('http://127.0.0.1:3000/health', (res) => process.exit(res.statusCode === 200 ? 0 : 1)).on('error', () => process.exit(1))"
+
+CMD ["sh", "-c", "npx prisma migrate deploy && npm start"]
