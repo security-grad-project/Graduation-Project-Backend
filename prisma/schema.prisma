@@ -32,18 +32,32 @@ enum crdb_internal_region {
 }
 
 model Analyst {
-  id            String         @id @default(uuid())
-  firstName     String
-  lastName      String
-  email         String         @unique
-  password      String
-  role          Role           @default(SOC_ADMIN)
-  phoneNumber   String
-  lastLogin     DateTime       @default(now())
-  createdAt     DateTime       @default(now())
-  updatedAt     DateTime       @updatedAt
-  refreshTokens RefreshToken[]
-  dashboards    Dashboard[]
+  id          String   @id @default(uuid())
+  firstName   String
+  lastName    String
+  email       String   @unique
+  password    String
+  role        Role     @default(SOC_ADMIN)
+  phoneNumber String
+  lastLogin   DateTime @default(now())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  refreshTokens       RefreshToken[]
+  passwordResetTokens PasswordResetToken[]
+  dashboards          Dashboard[]
+}
+
+model PasswordResetToken {
+  id        String   @id @default(uuid())
+  token     String   @unique
+  analystId String
+  analyst   Analyst  @relation(fields: [analystId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  @@index([token])
+  @@index([analystId])
 }
 
 model RefreshToken {

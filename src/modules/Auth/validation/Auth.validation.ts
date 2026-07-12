@@ -43,3 +43,12 @@ export const signupRequestValidation = z.object({
     }),
   phoneNumber: phoneNumberSchema,
 });
+
+export const forgetPasswordValidation = z.object({
+  email: z.string().trim().toLowerCase().email({ message: 'Please provide a valid email address' }),
+});
+
+export const resetPasswordValidation = z.object({
+  token: z.string().min(1, { message: 'Token is required' }),
+  password: passwordSchema,
+});

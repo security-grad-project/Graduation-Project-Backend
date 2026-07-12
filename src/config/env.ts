@@ -25,10 +25,12 @@ export default {
     .asString() as ms.StringValue,
 
   FRONTEND_URL: env.get('FRONTEND_URL').asString(),
+
   COOKIE_SECURE: env
     .get('COOKIE_SECURE')
     .default(isProduction ? 'true' : 'false')
     .asBoolStrict(),
+
   COOKIE_SAME_SITE: env
     .get('COOKIE_SAME_SITE')
     .default(isProduction ? 'none' : 'lax')

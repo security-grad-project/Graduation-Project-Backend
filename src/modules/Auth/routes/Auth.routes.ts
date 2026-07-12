@@ -6,10 +6,17 @@ import {
   logout,
   logoutAll,
   getActiveSessions,
+  forgetPassword,
+  resetPassword,
 } from '../controllers/Auth.controller';
 import { allowOnlyFirstRun } from '../middlewares/allowFirstRun';
 import validationMiddleware from '../../../common/middlewares/validation.middleware';
-import { loginRequestValidation, signupRequestValidation } from '../validation/Auth.validation';
+import {
+  loginRequestValidation,
+  signupRequestValidation,
+  forgetPasswordValidation,
+  resetPasswordValidation,
+} from '../validation/Auth.validation';
 import { loginLimiter, refreshLimiter } from '../../../config/limiter';
 import { authenticate } from '../../../common/middlewares';
 
@@ -355,5 +362,68 @@ router.post('/logout-all', authenticate, logoutAll);
  *               $ref: '#/components/schemas/Error'
  */
 router.get('/sessions', authenticate, getActiveSessions);
+
+/**
+ * @swagger
+ * /api/v1/auth/forget-password:
+ *   post:
+ *     summary: Request password reset
+ *     description: Request a password reset link to be sent via email
+ *     tags: [Auth]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - email
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 format: email
+ *                 example: analyst@example.com
+ *     responses:
+ *       200:
+ *         description: Request received
+ */
+router.post(
+  '/forget-password',
+  validationMiddleware({ body: forgetPasswordValidation }),
+  forgetPassword,
+);
+
+/**
+ * @swagger
+ * /api/v1/auth/reset-password:
+ *   post:
+ *     summary: Reset password
+ *     description: Reset password using token sent via email
+ *     tags: [Auth]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - token
+ *               - password
+ *             properties:
+ *               token:
+ *                 type: string
+ *               password:
+ *                 type: string
+ *                 format: password
+ *                 example: NewSecurePassword123!
+ *     responses:
+ *       200:
+ *         description: Password reset successfully
+ */
+router.post(
+  '/reset-password',
+  validationMiddleware({ body: resetPasswordValidation }),
+  resetPassword,
+);
 
 export default router;
