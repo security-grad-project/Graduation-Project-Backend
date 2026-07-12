@@ -8,7 +8,7 @@ export const translateKqlToDsl = (kql: string) => {
     return { match_all: {} };
   }
 
-  let lucene = queryText
+  const lucene = queryText
     .replace(/\band\b/gi, 'AND')
     .replace(/\bor\b/gi, 'OR')
     .replace(/\bnot\b/gi, 'NOT')

@@ -1,7 +1,13 @@
 import logger from '../../../common/utils/logger';
 import { prisma } from '../../../config/postgres';
 import { runElasticsearchQuery } from '../../../common/utils/queryRunner';
-import { QueryResult, RunQueryDto, createSavedQueryData, updateSavedQueryData, ListSavedQueriesQuery } from '../types/types';
+import {
+  QueryResult,
+  RunQueryDto,
+  createSavedQueryData,
+  updateSavedQueryData,
+  ListSavedQueriesQuery,
+} from '../types/types';
 import ApiErrorHandler from '../../../common/utils/ApiErrorHandler';
 import { paginate } from '../../../common/utils/primsa-util';
 
@@ -25,11 +31,11 @@ export const runHuntingQueryService = async (dto: RunQueryDto): Promise<QueryRes
 
 export const getSavedQueriesService = async (query: ListSavedQueriesQuery) => {
   const where: any = {};
-  
+
   if (query.category) {
     where.category = query.category;
   }
-  
+
   if (query.search) {
     where.OR = [
       { name: { contains: query.search, mode: 'insensitive' } },
@@ -45,7 +51,7 @@ export const getSavedQueriesService = async (query: ListSavedQueriesQuery) => {
       sortBy: query.sortBy,
       sortOrder: query.sortOrder,
     },
-    where
+    where,
   );
 };
 

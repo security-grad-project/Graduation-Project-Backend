@@ -21,12 +21,17 @@ router.use(authenticate);
 
 router.post('/query', validationMiddleware({ body: runQueryValidation }), executeQuery);
 
-router.route('/queries')
+router
+  .route('/queries')
   .get(getSavedQueries)
   .post(validationMiddleware({ body: createSavedQueryValidation }), createSavedQuery);
 
-router.route('/queries/:id')
-  .put(validationMiddleware({ params: savedQueryIdValidation, body: updateSavedQueryValidation }), updateSavedQuery)
+router
+  .route('/queries/:id')
+  .put(
+    validationMiddleware({ params: savedQueryIdValidation, body: updateSavedQueryValidation }),
+    updateSavedQuery,
+  )
   .delete(validationMiddleware({ params: savedQueryIdValidation }), deleteSavedQuery);
 
 export default router;

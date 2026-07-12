@@ -9,7 +9,12 @@ import {
 } from '../services/hunting.service';
 import { STATUS_CODE } from '../../../common/constants/responseCode';
 import { STATUS } from '../../../common/constants/responseStatus';
-import { RunQueryDto, createSavedQueryData, updateSavedQueryData, ListSavedQueriesQuery } from '../types/types';
+import {
+  RunQueryDto,
+  createSavedQueryData,
+  updateSavedQueryData,
+  ListSavedQueriesQuery,
+} from '../types/types';
 
 export const executeQuery = catchAsync(async (req: Request, res: Response) => {
   const result = await runHuntingQueryService(req.body as RunQueryDto);

@@ -76,7 +76,9 @@ async function seed() {
     for (const event of events) {
       const indexName = sourceMap.get(event.logSourceId);
       if (!indexName) {
-        logger.warn(`Event ${event.id} refers to unknown logSourceId ${event.logSourceId}. Skipping.`);
+        logger.warn(
+          `Event ${event.id} refers to unknown logSourceId ${event.logSourceId}. Skipping.`,
+        );
         continue;
       }
 
