@@ -26,7 +26,7 @@ export const setRefreshTokenCookie = (res: Response, refreshToken: string): void
   res.cookie('refreshToken', refreshToken, {
     httpOnly: true,
     secure: config.COOKIE_SECURE,
-    sameSite: config.COOKIE_SAME_SITE,
+    sameSite: 'none',
     maxAge: ms(config.REFRESH_TOKEN_EXPIRED_IN),
     path: '/',
   });
