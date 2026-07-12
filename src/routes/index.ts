@@ -7,6 +7,7 @@ import serviceRouter from '../modules/service/routes/service.routes';
 import logSourceRouter from '../modules/logSource/routes/logSource.routes';
 import alertRoutes from '../modules/Alerts/routes/alert.routes';
 import huntingRoutes from '../modules/Hunting/routes/hunting.routes';
+import dashboardRoutes from '../modules/Dashboards/routes/dashboard.routes';
 
 const router = express.Router();
 
@@ -19,4 +20,5 @@ router.use('/log-sources', logSourceRouter);
 router.use('/alerts', alertRoutes);
 router.use('/hunting', huntingRoutes);
 
+router.use('/dashboards', dashboardRoutes);
 export default router;
