@@ -88,6 +88,10 @@ const swaggerDefinition: SwaggerDefinition = {
       description: 'Security alert queue management endpoints',
     },
     {
+      name: 'Dashboards',
+      description: 'Dashboard management endpoints',
+    },
+    {
       name: 'LogSources',
       description: 'Log source management endpoints',
     },

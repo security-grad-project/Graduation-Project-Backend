@@ -6,6 +6,7 @@ import ruleRoutes from '../modules/Rule/routes/rule.routes';
 import serviceRouter from '../modules/service/routes/service.routes';
 import logSourceRouter from '../modules/logSource/routes/logSource.routes';
 import alertRoutes from '../modules/Alerts/routes/alert.routes';
+import dashboardRoutes from '../modules/Dashboards/routes/dashboard.routes';
 
 const router = express.Router();
 
@@ -16,5 +17,5 @@ router.use('/rules', ruleRoutes);
 router.use('/services', serviceRouter);
 router.use('/log-sources', logSourceRouter);
 router.use('/alerts', alertRoutes);
-
+router.use('/dashboards', dashboardRoutes);
 export default router;
