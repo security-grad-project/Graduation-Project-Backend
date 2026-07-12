@@ -31,7 +31,10 @@ export const getSavedQueries = catchAsync(async (req: Request, res: Response) =>
   const limitRaw = Number(req.query.limit);
 
   const sortByRaw = typeof req.query.sortBy === 'string' ? req.query.sortBy : undefined;
-  const sortOrderRaw = req.query.sortOrder === 'asc' || req.query.sortOrder === 'desc' ? req.query.sortOrder : undefined;
+  const sortOrderRaw =
+    req.query.sortOrder === 'asc' || req.query.sortOrder === 'desc'
+      ? req.query.sortOrder
+      : undefined;
 
   const query: ListSavedQueriesQuery = {
     page: Number.isFinite(pageRaw) && pageRaw >= 1 ? Math.floor(pageRaw) : 1,
