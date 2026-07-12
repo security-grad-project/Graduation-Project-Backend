@@ -188,3 +188,13 @@ model LogSource {
 
   rules Rule[]
 }
+
+model HuntingQuery {
+  id          String   @id @default(uuid())
+  category    String
+  name        String   @unique
+  esql        String
+  kql         String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
