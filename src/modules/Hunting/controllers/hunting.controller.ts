@@ -27,10 +27,13 @@ export const executeQuery = catchAsync(async (req: Request, res: Response) => {
 });
 
 export const getSavedQueries = catchAsync(async (req: Request, res: Response) => {
+  const pageRaw = Number(req.query.page);
+  const limitRaw = Number(req.query.limit);
+
   const query: ListSavedQueriesQuery = {
     ...req.query,
-    page: req.query.page ? parseInt(req.query.page as string, 10) : 1,
-    limit: req.query.limit ? parseInt(req.query.limit as string, 10) : 10,
+    page: Number.isFinite(pageRaw) && pageRaw >= 1 ? Math.floor(pageRaw) : 1,
+    limit: Number.isFinite(limitRaw) && limitRaw >= 1 ? Math.min(Math.floor(limitRaw), 100) : 10,
   } as unknown as ListSavedQueriesQuery;
   const queries = await getSavedQueriesService(query);
 
