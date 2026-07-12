@@ -27,7 +27,7 @@ export const matchIndexPattern = (target: string, allowedPatterns: string[]): bo
   const cleanTarget = target.toLowerCase();
 
   const patternToRegex = (pat: string) => {
-    const escaped = pat.replace(/[-\/\\^$+?.()|[\]{}]/g, '\\$&');
+    const escaped = pat.replace(/[-\/\\^$+?.()|[\]{}*]/g, '\\$&');
     const regexStr = '^' + escaped.replace(/\\\*/g, '.*') + '$';
     return new RegExp(regexStr, 'i');
   };

@@ -13,7 +13,7 @@ async function seed() {
     }
 
     const rawData = fs.readFileSync(SEED_FILE, 'utf-8');
-    const { logSources, events } = JSON.parse(rawData);
+    const { logSources, events, huntingQueries } = JSON.parse(rawData);
 
     logger.info('Starting database and Elasticsearch seeding...');
 
@@ -103,6 +103,27 @@ async function seed() {
     // Force flush Elasticsearch so indexed documents are immediately searchable
     await elasticClient.indices.refresh({ index: '_all' });
     logger.info('Elasticsearch indexes refreshed.');
+
+    // 3. Seed Hunting Queries to PostgreSQL via Prisma
+    if (huntingQueries && huntingQueries.length > 0) {
+      for (const query of huntingQueries) {
+        await prisma.huntingQuery.upsert({
+          where: { name: query.name },
+          update: {
+            category: query.category,
+            esql: query.esql,
+            kql: query.kql,
+          },
+          create: {
+            category: query.category,
+            name: query.name,
+            esql: query.esql,
+            kql: query.kql,
+          },
+        });
+        logger.info(`Hunting Query upserted in PostgreSQL: ${query.name}`);
+      }
+    }
 
     logger.info('Seeding completed successfully!');
   } catch (error) {

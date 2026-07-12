@@ -542,5 +542,17 @@
       "user.name": "ops@contoso",
       "message": "Virtual machine deleted"
     }
+  ],
+  "huntingQueries": [
+    { "category": "Authentication", "name": "Failed Windows logons (4625)", "esql": "FROM logs-* | WHERE event.code == \"4625\" | LIMIT 100", "kql": "event.code:4625" },
+    { "category": "Authentication", "name": "Kerberos service ticket requests (4769)", "esql": "FROM logs-* | WHERE event.code == \"4769\"", "kql": "event.code:4769" },
+    { "category": "Process", "name": "Office app spawned PowerShell", "esql": "FROM logs-windows.* | WHERE process.name == \"powershell.exe\" AND process.parent.name == \"winword.exe\"", "kql": "process.name:powershell.exe and process.parent.name:winword.exe" },
+    { "category": "Process", "name": "Files created in Public folder", "esql": "FROM logs-* | WHERE file.path LIKE \"*Public*\"", "kql": "file.path:*Public*" },
+    { "category": "Network", "name": "Connections to SMB (445)", "esql": "FROM logs-* | WHERE destination.port == 445", "kql": "destination.port:445" },
+    { "category": "Network", "name": "Suspicious DNS lookups", "esql": "FROM logs-* | WHERE dns.question.name LIKE \"*malicious*\"", "kql": "dns.question.name:*malicious*" },
+    { "category": "Cloud", "name": "New IAM access keys", "esql": "FROM logs-aws.* | WHERE event.action == \"CreateAccessKey\"", "kql": "event.action:CreateAccessKey" },
+    { "category": "Cloud", "name": "Console / portal logins", "esql": "FROM logs-* | WHERE event.action == \"ConsoleLogin\"", "kql": "event.action:ConsoleLogin" },
+    { "category": "Analytics", "name": "Event volume by host", "esql": "FROM logs-* | STATS count() BY host.name" },
+    { "category": "Analytics", "name": "Top event actions", "esql": "FROM logs-* | STATS count() BY event.action" }
   ]
 }
