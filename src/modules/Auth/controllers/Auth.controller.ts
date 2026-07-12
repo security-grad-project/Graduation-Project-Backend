@@ -16,6 +16,10 @@ import { STATUS, STATUS_CODE } from '../../../common/constants/constants';
 import { LoginData, SignupData } from '../types/types';
 import { IRequest } from '../../../common/interfaces/types';
 import ApiErrorHandler from '../../../common/utils/ApiErrorHandler';
+import {
+  requestPasswordReset,
+  resetPassword as resetPasswordService,
+} from '../services/passwordReset.service';
 
 export const signup = catchAsync(async (req: Request, res: Response): Promise<void> => {
   const data: SignupData = req.body as SignupData;
@@ -104,5 +108,27 @@ export const getActiveSessions = catchAsync(async (req: IRequest, res: Response)
   res.status(STATUS_CODE.SUCCESS).json({
     status: STATUS.SUCCESS,
     data: sessions,
+  });
+});
+
+export const forgetPassword = catchAsync(async (req: Request, res: Response): Promise<void> => {
+  const { email } = req.body;
+
+  await requestPasswordReset(email);
+
+  res.status(STATUS_CODE.SUCCESS).json({
+    status: STATUS.SUCCESS,
+    message: 'If the email exists, a password reset link has been sent.',
+  });
+});
+
+export const resetPassword = catchAsync(async (req: Request, res: Response): Promise<void> => {
+  const { token, password } = req.body;
+
+  await resetPasswordService(token, password);
+
+  res.status(STATUS_CODE.SUCCESS).json({
+    status: STATUS.SUCCESS,
+    message: 'Password has been reset successfully.',
   });
 });
