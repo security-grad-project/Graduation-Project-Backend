@@ -26,22 +26,26 @@ enum Status {
   IGNORED
   OTHER
 }
+
 enum crdb_internal_region {
   aws_eu_central_1 @map("aws-eu-central-1")
 }
+
 model Analyst {
-  id            String         @id @default(uuid())
-  firstName     String
-  lastName      String
-  email         String         @unique
-  password      String
-  role          Role           @default(SOC_ADMIN)
-  phoneNumber   String
-  lastLogin     DateTime       @default(now())
-  createdAt           DateTime             @default(now())
-  updatedAt           DateTime             @updatedAt
+  id          String   @id @default(uuid())
+  firstName   String
+  lastName    String
+  email       String   @unique
+  password    String
+  role        Role     @default(SOC_ADMIN)
+  phoneNumber String
+  lastLogin   DateTime @default(now())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
   refreshTokens       RefreshToken[]
   passwordResetTokens PasswordResetToken[]
+  dashboards          Dashboard[]
 }
 
 model PasswordResetToken {
@@ -124,12 +128,12 @@ model Rule {
   name         String   @unique
   description  String
   type         String
-  mitreTactics String[] 
+  mitreTactics String[]
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
-  
-  logSourceId  String?
-  logSource    LogSource? @relation(fields: [logSourceId], references: [id], onDelete: SetNull)
+
+  logSourceId String?
+  logSource   LogSource? @relation(fields: [logSourceId], references: [id], onDelete: SetNull)
 
   alerts Alert[]
 
@@ -147,26 +151,42 @@ model Alert {
   updatedAt   DateTime @updatedAt
   rule        Rule     @relation(fields: [ruleId], references: [id], onDelete: Cascade)
   ruleId      String
-  device      Device?   @relation(fields: [deviceId], references: [id])
+  device      Device?  @relation(fields: [deviceId], references: [id])
   deviceId    String?
   confidence  Float
   severity    Severity
   status      Status
   scope       String?
   source      String?
-  mitre       String[] 
+  mitre       String[]
+}
+
+model Dashboard {
+  id          String   @id @default(uuid())
+  title       String
+  description String?
+  tags        String[]
+  ownerId     String
+  owner       Analyst  @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  panels      Json     @default("[]")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([ownerId])
+  @@index([createdAt])
+  @@index([title])
 }
 
 model LogSource {
   id            String   @id @default(uuid())
   name          String   @unique
-  category      String 
+  category      String
   vendor        String
   product       String
   description   String
   dataset       String
   type          String   @default("logs")
-  index         String   // The Elasticsearch index pattern to query
+  index         String // The Elasticsearch index pattern to query
   agent         String
   agentVersion  String   @default("9.2.1")
   pipeline      String
@@ -180,5 +200,5 @@ model LogSource {
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 
-  rules         Rule[]
+  rules Rule[]
 }
