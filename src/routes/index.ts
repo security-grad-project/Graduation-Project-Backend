@@ -8,6 +8,7 @@ import logSourceRouter from '../modules/logSource/routes/logSource.routes';
 import alertRoutes from '../modules/Alerts/routes/alert.routes';
 import huntingRoutes from '../modules/Hunting/routes/hunting.routes';
 import dashboardRoutes from '../modules/Dashboards/routes/dashboard.routes';
+import discoverRoutes from '../modules/Discover/routes/discover.routes';
 
 const router = express.Router();
 
@@ -21,4 +22,5 @@ router.use('/alerts', alertRoutes);
 router.use('/hunting', huntingRoutes);
 
 router.use('/dashboards', dashboardRoutes);
+router.use('/discover', discoverRoutes);
 export default router;
