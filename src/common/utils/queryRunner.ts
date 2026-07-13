@@ -96,9 +96,7 @@ export const runElasticsearchQuery = async (
       throw new ApiErrorHandler(403, `Access denied for index pattern: ${targetIndex}`);
     }
 
-    let rewrittenQuery = query
-      .trim()
-      .replace(/^\s*from\s+[^\s|]+/i, `FROM ${matchedIndices.join(',')}`);
+    let rewrittenQuery = query.trim();
     const limitRegex = /\|\s*limit\s+(\d+)/i;
     const limitMatch = rewrittenQuery.match(limitRegex);
     if (!limitMatch) {

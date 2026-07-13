@@ -56,9 +56,8 @@ export default (err: any, req: Request, res: Response, next: NextFunction) => {
     logger.warn(`Prisma error handled: ${err.code} - ${err.message}`);
   }
 
-  if (!err.statusCode || !err.isOperational) {
-    err.statusCode = err.statusCode || 500;
-    err.status = err.status || 'FAIL';
+  if (!err.isOperational) {
+    err = new ApiErrorHandler(err.statusCode || 500, err.message || 'Something went wrong');
   }
 
   logger.error(err);
