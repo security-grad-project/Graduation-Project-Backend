@@ -41,7 +41,8 @@ export const matchIndexPattern = (target: string, allowedPatterns: string[]): bo
       targetRegex.test(pattern.toLowerCase()) ||
       pattern.toLowerCase() === cleanTarget ||
       cleanTarget === '*' ||
-      cleanTarget === 'logs-*'
+      cleanTarget === 'logs-*' ||
+      cleanTarget === 'logs-*-*'
     );
   });
 };

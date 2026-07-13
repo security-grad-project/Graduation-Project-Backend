@@ -68,6 +68,4 @@ export default (err: any, req: Request, res: Response, next: NextFunction) => {
   } else if (env.NODE_ENV === 'production') {
     sendProductionError(err, req, res);
   }
-
-  next();
 };
