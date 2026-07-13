@@ -47,6 +47,19 @@ export const matchIndexPattern = (target: string, allowedPatterns: string[]): bo
   });
 };
 
+const translateEsError = (err: any): ApiErrorHandler => {
+  if (err?.name === 'ResponseError') {
+    const reason: string | undefined = err.body?.error?.reason || err.message;
+    const esStatus: number = err.body?.status || err.statusCode || 400;
+    const statusCode = esStatus === 404 ? 400 : esStatus >= 400 && esStatus < 500 ? esStatus : 502;
+    return new ApiErrorHandler(statusCode, `Elasticsearch query failed: ${reason}`);
+  }
+  if (err?.name === 'ConnectionError' || err?.name === 'TimeoutError') {
+    return new ApiErrorHandler(502, 'Could not reach Elasticsearch. Please try again shortly.');
+  }
+  return new ApiErrorHandler(500, 'Query execution failed');
+};
+
 export const runElasticsearchQuery = async (
   query: string,
   language: 'esql' | 'kql',
@@ -56,12 +69,17 @@ export const runElasticsearchQuery = async (
 
   if (language === 'kql') {
     const dslQuery = translateKqlToDsl(query);
-    const response = await elasticClient.search({
-      index: activeIndices.join(','),
-      query: dslQuery,
-      size: 1000,
-      timeout: '30s',
-    });
+    let response;
+    try {
+      response = await elasticClient.search({
+        index: activeIndices.join(','),
+        query: dslQuery,
+        size: 1000,
+        timeout: '30s',
+      });
+    } catch (err: any) {
+      throw translateEsError(err);
+    }
 
     const hits = response.hits.hits;
 
@@ -96,7 +114,9 @@ export const runElasticsearchQuery = async (
       throw new ApiErrorHandler(403, `Access denied for index pattern: ${targetIndex}`);
     }
 
-    let rewrittenQuery = query.trim();
+    let rewrittenQuery = query
+      .trim()
+      .replace(/^\s*from\s+[^\s|]+/i, `FROM ${matchedIndices.join(',')}`);
     const limitRegex = /\|\s*limit\s+(\d+)/i;
     const limitMatch = rewrittenQuery.match(limitRegex);
     if (!limitMatch) {
@@ -107,10 +127,15 @@ export const runElasticsearchQuery = async (
         rewrittenQuery = rewrittenQuery.replace(limitRegex, '| LIMIT 1000');
       }
     }
-    const esqlRes = await elasticClient.esql.query(
-      { query: rewrittenQuery },
-      { requestTimeout: 30000 },
-    );
+    let esqlRes;
+    try {
+      esqlRes = await elasticClient.esql.query(
+        { query: rewrittenQuery },
+        { requestTimeout: 30000 },
+      );
+    } catch (err: any) {
+      throw translateEsError(err);
+    }
     const columns = esqlRes.columns.map((c: any) => c.name);
     const rows = esqlRes.values.map((row: any[]) => {
       const obj: any = {};
