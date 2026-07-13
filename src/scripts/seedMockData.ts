@@ -130,7 +130,7 @@ async function seed() {
     logger.info('Seeding completed successfully!');
   } catch (error) {
     logger.error('Seeding failed:', { error });
-    process.exitCode = 1;
+    process.exit(1);
   } finally {
     await prisma.$disconnect();
   }

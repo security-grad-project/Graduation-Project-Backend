@@ -30,7 +30,6 @@ export const getSavedQueries = catchAsync(async (req: Request, res: Response) =>
   const pageRaw = Number(req.query.page);
   const limitRaw = Number(req.query.limit);
 
-
   const query: ListSavedQueriesQuery = {
     ...req.query,
     page: Number.isFinite(pageRaw) && pageRaw >= 1 ? Math.floor(pageRaw) : 1,
