@@ -63,6 +63,7 @@ const handlePrismaError = (err: any): ApiErrorHandler => {
   }
 };
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars
 export default (err: any, req: Request, res: Response, next: NextFunction) => {
   if (err.code && Object.values(PRISMA_ERROR).includes(err.code)) {
     err = handlePrismaError(err);
