@@ -103,7 +103,7 @@ async function seed() {
     }
 
     // Force flush Elasticsearch so indexed documents are immediately searchable
-    await elasticClient.indices.refresh({ index: Array.from(new Set(sourceMap.values())) });
+    await elasticClient.indices.refresh({ index: '_all' });
     logger.info('Elasticsearch indexes refreshed.');
 
     // 3. Seed Hunting Queries to PostgreSQL via Prisma
