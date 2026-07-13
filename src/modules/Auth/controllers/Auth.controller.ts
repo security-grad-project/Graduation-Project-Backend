@@ -9,8 +9,6 @@ import {
   logoutAllService,
   getActiveSessionsService,
   getLoginContext,
-  setRefreshTokenCookie,
-  clearRefreshTokenCookie,
 } from '../services/Auth.service';
 import { STATUS, STATUS_CODE } from '../../../common/constants/constants';
 import { LoginData, SignupData } from '../types/types';
@@ -40,17 +38,16 @@ export const login = catchAsync(async (req: Request, res: Response): Promise<voi
 
   logger.info('Analyst logged in successfully', { email: analyst.email });
 
-  setRefreshTokenCookie(res, refreshToken);
-
   res.status(STATUS_CODE.SUCCESS).json({
     status: STATUS.SUCCESS,
     data: analyst,
     token: accessToken,
+    refreshToken: refreshToken,
   });
 });
 
 export const refresh = catchAsync(async (req: Request, res: Response): Promise<void> => {
-  const refreshToken = req.cookies.refreshToken;
+  const refreshToken = req.body.refreshToken;
 
   if (!refreshToken) {
     throw new ApiErrorHandler(STATUS_CODE.BAD_REQUEST, 'Refresh token is required');
@@ -64,24 +61,21 @@ export const refresh = catchAsync(async (req: Request, res: Response): Promise<v
 
   logger.info('Token refreshed successfully');
 
-  setRefreshTokenCookie(res, newRefreshToken);
-
   res.status(STATUS_CODE.SUCCESS).json({
     status: STATUS.SUCCESS,
     token: accessToken,
+    refreshToken: newRefreshToken,
   });
 });
 
 export const logout = catchAsync(async (req: IRequest, res: Response): Promise<void> => {
   const accessToken = req.accessToken;
-  const refreshToken = req.cookies.refreshToken;
+  const refreshToken = req.body.refreshToken;
 
   if (accessToken) {
     await logoutService(accessToken, refreshToken);
     logger.info('Analyst logged out successfully', { userId: req.user?.id });
   }
-
-  clearRefreshTokenCookie(res);
 
   res.status(STATUS_CODE.SUCCESS).json({
     status: STATUS.SUCCESS,
@@ -93,8 +87,6 @@ export const logoutAll = catchAsync(async (req: IRequest, res: Response): Promis
   await logoutAllService(req.user!.id, req.accessToken!);
 
   logger.info('All sessions logged out for analyst', { userId: req.user!.id });
-
-  clearRefreshTokenCookie(res);
 
   res.status(STATUS_CODE.SUCCESS).json({
     status: STATUS.SUCCESS,
