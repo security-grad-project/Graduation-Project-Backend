@@ -30,23 +30,11 @@ export const getSavedQueries = catchAsync(async (req: Request, res: Response) =>
   const pageRaw = Number(req.query.page);
   const limitRaw = Number(req.query.limit);
 
-  const sortByRaw = typeof req.query.sortBy === 'string' ? req.query.sortBy : undefined;
-  const sortOrderRaw =
-    req.query.sortOrder === 'asc' || req.query.sortOrder === 'desc'
-      ? req.query.sortOrder
-      : undefined;
-
   const query: ListSavedQueriesQuery = {
+    ...req.query,
     page: Number.isFinite(pageRaw) && pageRaw >= 1 ? Math.floor(pageRaw) : 1,
     limit: Number.isFinite(limitRaw) && limitRaw >= 1 ? Math.min(Math.floor(limitRaw), 100) : 10,
-    search: typeof req.query.search === 'string' ? req.query.search : undefined,
-    category: typeof req.query.category === 'string' ? req.query.category : undefined,
-    sortBy:
-      sortByRaw && ['name', 'category', 'createdAt', 'updatedAt'].includes(sortByRaw)
-        ? sortByRaw
-        : undefined,
-    sortOrder: sortOrderRaw,
-  };
+  } as unknown as ListSavedQueriesQuery;
   const queries = await getSavedQueriesService(query);
 
   res.status(STATUS_CODE.SUCCESS).json({

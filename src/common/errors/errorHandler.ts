@@ -4,23 +4,36 @@ import logger from '../utils/logger';
 import ApiErrorHandler from '../utils/ApiErrorHandler';
 import { STATUS_CODE, PRISMA_ERROR } from '../constants/constants';
 
-const sendDevelopmentError = (err: any, req: Request, res: Response) => {
-  return res.status(err.statusCode).json({
-    status: err.status,
+const sendDevelopmentError = (
+  err: any,
+  statusCode: number,
+  status: string,
+  req: Request,
+  res: Response,
+) => {
+  return res.status(statusCode).json({
+    status,
     error: err,
     message: err.message,
     stack: err.stack,
   });
 };
 
-const sendProductionError = (err: any, req: Request, res: Response) => {
-  if (err.isOperational) {
-    return res.status(err.statusCode).json({
-      status: err.status,
+const sendProductionError = (
+  err: any,
+  statusCode: number,
+  status: string,
+  isOperational: boolean,
+  req: Request,
+  res: Response,
+) => {
+  if (isOperational) {
+    return res.status(statusCode).json({
+      status,
       message: err.message,
     });
   } else {
-    return res.status(err.statusCode).json({
+    return res.status(statusCode).json({
       status: 'ERROR',
       message: 'Something went wrong',
     });
@@ -50,24 +63,25 @@ const handlePrismaError = (err: any): ApiErrorHandler => {
   }
 };
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars
 export default (err: any, req: Request, res: Response, next: NextFunction) => {
   if (err.code && Object.values(PRISMA_ERROR).includes(err.code)) {
     err = handlePrismaError(err);
     logger.warn(`Prisma error handled: ${err.code} - ${err.message}`);
   }
 
-  if (!err.statusCode || !err.isOperational) {
-    err.statusCode = err.statusCode || 500;
-    err.status = err.status || 'FAIL';
-  }
+  // Don't mutate err.statusCode/err.status directly — some errors (e.g. the
+  // Elasticsearch client's ResponseError) define these as getter-only
+  // accessors, and assigning to them throws and crashes this middleware.
+  const isOperational = !!err.isOperational;
+  const statusCode = isOperational && err.statusCode ? err.statusCode : 500;
+  const status = isOperational && err.status ? err.status : 'FAIL';
 
   logger.error(err);
 
   if (env.NODE_ENV === 'development') {
-    sendDevelopmentError(err, req, res);
-  } else if (env.NODE_ENV === 'production') {
-    sendProductionError(err, req, res);
+    sendDevelopmentError(err, statusCode, status, req, res);
+  } else {
+    sendProductionError(err, statusCode, status, isOperational, req, res);
   }
-
-  next();
 };
